@@ -12,7 +12,7 @@ export default function Home() {
   const [error, setError] = useState(null);
   const StarRating = ({ rating }: { rating: number }) => {
     let stars = [];
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= Math.round(rating); i++) {
       if (i <= rating) {
         // Full star
         stars.push(
@@ -75,7 +75,7 @@ export default function Home() {
       movieName: "Shooter",
       movieImage: "/2aWGxo1E5polpBjPvtBRkWp7qaS.jpg",
       reviewText:
-        "This movie was absolutely mind-blowing. All around solid action-thriller with Mark Wahlberg in his element. Luis Guzman served as a fun sidekick and Kate Mara is a stunner. Shame this didnt do better at the box office, wouldve liked to have a sequel",
+        "This movie was absolutely mind-blowing. All around solid action-thriller with Mark Wahlberg in his element...",
       user: {
         name: "@huntermacias",
         avatar: "/images/avatars/me.jpg",
@@ -83,8 +83,35 @@ export default function Home() {
       stars: 5,
       commentsCount: 15,
     },
-    // ... add more reviews
+    {
+      id: 2,
+      movieName: "X-Men",
+      movieImage: "/bRDAc4GogyS9ci3ow7UnInOcriN.jpg", // Replace with actual image path
+      reviewText:
+        "X-Men started it all - a thrilling adventure with characters that have depth, and a storyline that's engaging.",
+      user: {
+        name: "@amylainez",
+        avatar: "/images/avatars/amy.jpg", // Replace with actual avatar path
+      },
+      stars: 3,
+      commentsCount: 42,
+    },
+    {
+      id: 3,
+      movieName: "X2: X-Men United",
+      movieImage: "/pwQo1ehiPBqAbiVqD6rfNM8GCFE.jpg", // Replace with actual image path
+      reviewText:
+        "A sequel that outdoes the original in every way. The action is better, the stakes are higher, and the characters get more depth.",
+      user: {
+        name: "@huntermacias",
+        avatar: "/images/avatars/me.jpg", // Replace with actual avatar path
+      },
+      stars: 3.7,
+      commentsCount: 37,
+    },
+    // ... Add more X-Men movie reviews as needed
   ];
+
   useEffect(() => {
     const loadMovies = async () => {
       try {
@@ -139,7 +166,9 @@ export default function Home() {
       <div className="flex-1 overflow-y-auto py-5">
         {/* Popular Films This Month */}
         <section className="mt-10 px-5">
-          <h2 className="text-xl text-white font-bold mb-4">Popular Films This Month</h2>
+          <h2 className="text-xl text-white font-bold mb-4">
+            Popular Films This Month
+          </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {movies.map((movie) => (
               <div key={movie.id} className="flex-shrink-0 space-y-2">
@@ -157,10 +186,15 @@ export default function Home() {
 
         {/* Popular Lists This Month */}
         <section className="mt-10 px-5">
-          <h2 className="text-xl text-white font-bold mb-4">Popular Lists This Month</h2>
+          <h2 className="text-xl text-white font-bold mb-4">
+            Popular Lists This Month
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {lists.map((list) => (
-              <div key={list.id} className="bg-[#262547] p-4 rounded-lg shadow-lg">
+              <div
+                key={list.id}
+                className="bg-[#262547] p-4 rounded-lg shadow-lg"
+              >
                 <Image
                   className="rounded-lg"
                   src={`${BASE_IMAGE_URL}${list.poster_path}`}
@@ -175,66 +209,77 @@ export default function Home() {
                     src={list.user.avatar}
                     alt={list.user.name}
                     width={30}
-                    height={
-30}
-/>
-<div className="ml-2">
-<span className="text-sm text-white">{list.user.name}</span>
-<div className="flex items-center mt-1">
-<span className="text-xs text-blue-300 mr-2">❤️ {list.likes}</span>
-<span className="text-xs text-white">💬 {list.comments}</span>
-</div>
-</div>
-</div>
-</div>
-))}
-</div>
-</section>
-
-            {/* Recent Friends’ Review */}
-    <section className="mt-10 px-5">
-      <h2 className="text-xl text-white font-bold mb-4">Recent Friends Reviews</h2>
-      <div className="space-y-6">
-        {reviews.map((review) => (
-          <div key={review.id} className="flex space-x-4">
-            <div className="w-1/3">
-              <Image
-                className="rounded-lg"
-                src={`${BASE_IMAGE_URL}${review.movieImage}`}
-                alt={review.movieName}
-                width={100}
-                height={150}
-              />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="text-lg text-white font-medium">{review.movieName}</h3>
-                  <p className="text-gray-400 text-sm">Reviewed by <span className="text-red-300">{review.user.name}</span></p>
-                  <StarRating rating={review.stars} />
-                </div>
-                <div className="flex-shrink-0">
-                  <Image
-                    className="rounded-full"
-                    src={review.user.avatar}
-                    alt={review.user.name}
-                    width={50}
-                    height={50}
+                    height={30}
                   />
+                  <div className="ml-2">
+                    <span className="text-sm text-white">{list.user.name}</span>
+                    <div className="flex items-center mt-1">
+                      <span className="text-xs text-blue-300 mr-2">
+                        ❤️ {list.likes}
+                      </span>
+                      <span className="text-xs text-white">
+                        💬 {list.comments}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <p className="text-white text-sm mt-2">{review.reviewText}</p>
-              <button className="text-red-500 text-xs mt-2">Read more</button>
-            </div>
+            ))}
           </div>
-        ))}
+        </section>
+
+        {/* Recent Friends’ Review */}
+        <section className="mt-10 px-5">
+          <h2 className="text-xl text-white font-bold mb-4">
+            Recent Friends Reviews
+          </h2>
+          <div className="space-y-6">
+            {reviews.map((review) => (
+              <div key={review.id} className="flex space-x-4">
+                <div className="w-1/3">
+                  <Image
+                    className="rounded-lg"
+                    src={`${BASE_IMAGE_URL}${review.movieImage}`}
+                    alt={review.movieName}
+                    width={100}
+                    height={150}
+                  />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h3 className="text-lg text-white font-medium">
+                        {review.movieName}
+                      </h3>
+                      <p className="text-gray-400 text-sm">
+                        Reviewed by{" "}
+                        <span className="text-red-300">{review.user.name}</span>
+                      </p>
+                      <StarRating rating={review.stars} />
+                    </div>
+                    <div className="flex-shrink-0">
+                      <Image
+                        className="rounded-full"
+                        src={review.user.avatar}
+                        alt={review.user.name}
+                        width={50}
+                        height={50}
+                      />
+                    </div>
+                  </div>
+                  <p className="text-white text-sm mt-2">{review.reviewText}</p>
+                  <button className="text-red-500 text-xs mt-2">
+                    Read more
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
-    </section>
-  </div>
 
-  {/* Footer or other content */}
-  {/* ... */}
-</div>
-
+      {/* Footer or other content */}
+      {/* ... */}
+    </div>
   );
 }

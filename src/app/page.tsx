@@ -10,6 +10,24 @@ export default function Home() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const StarRating = ({ rating }: { rating: number }) => {
+    let stars = [];
+    for (let i = 1; i <= 5; i++) {
+      if (i <= rating) {
+        // Full star
+        stars.push(<span key={i} className="text-yellow-400">⭐</span>);
+      } else if (i === Math.ceil(rating) && !Number.isInteger(rating)) {
+        // Half star
+        stars.push(<span key={i} className="text-yellow-400">⭐</span>); // Customize this for a half-star icon
+      } else {
+        // Empty star
+        stars.push(<span key={i} className="text-gray-300">⭐</span>); // Customize this for an empty star icon
+      }
+    }
+    return <div>{stars}</div>;
+  };
+  
+
   // Dummy data for lists
   const lists: List[] = [
     {
@@ -196,8 +214,11 @@ const reviews: Review[] = [
       <div className="flex-1">
         <h3 className="text-white text-lg font-medium">{review.movieName}</h3>
         <p className="text-gray-400 text-xs">Reviewed by <span className='text-red-300'>{review.user.name}</span></p>
-        <p className="text-yellow-400 text-xs">⭐⭐⭐⭐⭐ {review.stars}</p>
-        <p className="text-white text-xs"> 💬 {review.commentsCount}</p>
+        <div className="flex space-x-4">
+        <StarRating rating={review.stars} />
+        <p className="text-white text-md"> 💬 {review.commentsCount}</p>
+
+        </div>
         <p className="text-white text-xs">{review.reviewText}</p>
         <button className="text-red-500 text-xs mt-2">Read more</button>
       </div>

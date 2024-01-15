@@ -15,18 +15,29 @@ export default function Home() {
     for (let i = 1; i <= 5; i++) {
       if (i <= rating) {
         // Full star
-        stars.push(<span key={i} className="text-yellow-400">⭐</span>);
+        stars.push(
+          <span key={i} className="text-yellow-400">
+            ⭐
+          </span>
+        );
       } else if (i === Math.ceil(rating) && !Number.isInteger(rating)) {
         // Half star
-        stars.push(<span key={i} className="text-yellow-400">⭐</span>); // Customize this for a half-star icon
+        stars.push(
+          <span key={i} className="text-yellow-400">
+            ⭐
+          </span>
+        ); // Customize this for a half-star icon
       } else {
         // Empty star
-        stars.push(<span key={i} className="text-gray-300">⭐</span>); // Customize this for an empty star icon
+        stars.push(
+          <span key={i} className="text-gray-300">
+            ⭐
+          </span>
+        ); // Customize this for an empty star icon
       }
     }
     return <div className="flex space-x-1">{stars}</div>;
   };
-  
 
   // Dummy data for lists
   const lists: List[] = [
@@ -58,21 +69,22 @@ export default function Home() {
   ];
 
   // Dummy data for reviews
-const reviews: Review[] = [
-  {
-    id: 1,
-    movieName: 'Shooter',
-    movieImage: '/2aWGxo1E5polpBjPvtBRkWp7qaS.jpg',
-    reviewText: 'This movie was absolutely mind-blowing. All around solid action-thriller with Mark Wahlberg in his element. Luis Guzman served as a fun sidekick and Kate Mara is a stunner. Shame this didnt do better at the box office, wouldve liked to have a sequel',
-    user: {
-      name: '@huntermacias',
-      avatar: '/images/avatars/me.jpg',
+  const reviews: Review[] = [
+    {
+      id: 1,
+      movieName: "Shooter",
+      movieImage: "/2aWGxo1E5polpBjPvtBRkWp7qaS.jpg",
+      reviewText:
+        "This movie was absolutely mind-blowing. All around solid action-thriller with Mark Wahlberg in his element. Luis Guzman served as a fun sidekick and Kate Mara is a stunner. Shame this didnt do better at the box office, wouldve liked to have a sequel",
+      user: {
+        name: "@huntermacias",
+        avatar: "/images/avatars/me.jpg",
+      },
+      stars: 5,
+      commentsCount: 15,
     },
-    stars: 5,
-    commentsCount: 15
-  },
-  // ... add more reviews
-];
+    // ... add more reviews
+  ];
   useEffect(() => {
     const loadMovies = async () => {
       try {
@@ -193,54 +205,50 @@ const reviews: Review[] = [
           </div>
         </div>
 
-        {/* Recent Friends’ Review */}
-  
-<h2 className="text-white text-lg font-semibold px-5 tracking-wider mt-10">
-  Recent Friends Reviews
-</h2>
-<div className="px-5 mt-4">
-  {reviews.map((review) => (
-    <div key={review.id} className="flex items-start space-x-4 mb-6">
-      {/* User Info and Review Text */}
-      <div className="flex-shrink-0">
-        <Image
-          className="rounded-full"
-          src={review.user.avatar}
-          alt={review.user.name}
-          width={50}
-          height={50}
-        />
+            {/* Recent Friends’ Review */}
+    <section className="mt-10 px-5">
+      <h2 className="text-xl text-white font-bold mb-4">Recent Friends Reviews</h2>
+      <div className="space-y-6">
+        {reviews.map((review) => (
+          <div key={review.id} className="flex space-x-4">
+            <div className="w-1/3">
+              <Image
+                className="rounded-lg"
+                src={`${BASE_IMAGE_URL}${review.movieImage}`}
+                alt={review.movieName}
+                width={100}
+                height={150}
+              />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-lg text-white font-medium">{review.movieName}</h3>
+                  <p className="text-gray-400 text-sm">Reviewed by <span className="text-red-300">{review.user.name}</span></p>
+                  <StarRating rating={review.stars} />
+                </div>
+                <div className="flex-shrink-0">
+                  <Image
+                    className="rounded-full"
+                    src={review.user.avatar}
+                    alt={review.user.name}
+                    width={50}
+                    height={50}
+                  />
+                </div>
+              </div>
+              <p className="text-white text-sm mt-2">{review.reviewText}</p>
+              <button className="text-red-500 text-xs mt-2">Read more</button>
+            </div>
+          </div>
+        ))}
       </div>
-      <div className="flex-1">
-        <h3 className="text-white text-lg font-medium">{review.movieName}</h3>
-        <p className="text-gray-400 text-xs">Reviewed by <span className='text-red-300'>{review.user.name}</span></p>
-        <div className="flex space-x-4">
-        <StarRating rating={review.stars} />
-        <p className="text-white text-md"> 💬 {review.commentsCount}</p>
+    </section>
+  </div>
 
-        </div>
-        <p className="text-white text-xs">{review.reviewText}</p>
-        <button className="text-red-500 text-xs mt-2">Read more</button>
-      </div>
-
-      {/* Movie Image */}
-      <div className="flex-shrink-0">
-        <Image
-          className="rounded-lg"
-          src={`${BASE_IMAGE_URL}${review.movieImage}`}
-          alt={review.movieName}
-          width={100} // Adjust based on your layout
-          height={150} // Adjust based on your layout
-        />
-      </div>
-    </div>
-  ))}
+  {/* Footer or other content */}
+  {/* ... */}
 </div>
 
-      </div>
-
-      {/* Footer or other content */}
-      {/* ... */}
-    </div>
   );
 }

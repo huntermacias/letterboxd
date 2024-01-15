@@ -4,6 +4,7 @@ import Movie from "@/types/movie";
 import { usePathname } from "next/navigation";
 // import { StarIcon } from '@heroicons/react/solid'; // Ensure you have `@heroicons/react` installed
 import Image from "next/image";
+import { ImageConfigContext } from "next/dist/shared/lib/image-config-context.shared-runtime";
 
 // This is a placeholder for the StarRating component. You should implement it according to your needs.
 // const StarRating = ({ rating: }) => {
@@ -15,6 +16,19 @@ const MovieDetailPage = () => {
   const pathname = usePathname();
   const [movie, setMovie] = useState<Movie>();
   const [error, setError] = useState<string>("");
+  const [trailerKey, setTrailerKey] = useState("");
+  const [isTrailerModalOpen, setTrailerModalOpen] = useState(false);
+
+  // Function to open the trailer modal
+  const openTrailerModal = () => {
+    setTrailerModalOpen(true);
+  };
+
+  // Function to close the trailer modal
+  const closeTrailerModal = () => {
+    setTrailerModalOpen(false);
+  };
+
   const StarRating = ({ rating }: { rating: number }) => {
     let stars = [];
     for (let i = 1; i <= Math.round(rating); i++) {
@@ -81,7 +95,45 @@ const MovieDetailPage = () => {
       }
     };
 
-    fetchMovieData();
+    const fetchTrailerKey = async () => {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=6500efce781df0e3504d6dd24db9a472`
+      );
+      const data = await response.json();
+      const officialTrailer = data.results.find(
+        (video: { type: string; official: any }) =>
+          video.type === "Trailer" && video.official
+      );
+      setTrailerKey(officialTrailer?.key);
+    };
+
+    if (movieId) {
+      fetchMovieData();
+      fetchTrailerKey();
+    }
+  }, [pathname]);
+
+  // Function to fetch trailer video ID
+  const fetchTrailerId = async (movieId: string) => {
+    const url = `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=6500efce781df0e3504d6dd24db9a472`;
+    const response = await fetch(url);
+    const data = await response.json();
+    // Filter for official trailers and extract the YouTube video key
+    const trailer = data.results.find(
+      (video: { type: string; site: string }) =>
+        video.type === "Trailer" && video.site === "YouTube"
+    );
+    return trailer ? trailer.key : null;
+  };
+
+  // Usage within useEffect or a similar hook
+  useEffect(() => {
+    const movieId = pathname.split("/").pop();
+    if (movieId) {
+      fetchTrailerId(movieId).then((trailerId) => {
+        // Now you can use `trailerId` to embed the trailer or set up a link
+      });
+    }
   }, [pathname]);
 
   if (error) return <div className="text-center py-10">Error: {error}</div>;
@@ -99,11 +151,34 @@ const MovieDetailPage = () => {
           className="rounded-t-xl object-cover w-full"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent rounded-t-xl" />
-        <button className="absolute bottom-4 right-4 bg-red-700 hover:bg-red-800 px-4 py-2 rounded shadow-lg transition duration-300 ease-in-out text-sm md:text-base">
+        <button
+          onClick={openTrailerModal}
+          className="absolute bottom-4 right-4 bg-red-700 hover:bg-red-800 px-4 py-2 rounded shadow-lg transition duration-300 ease-in-out text-sm md:text-base"
+        >
           Watch Trailer
         </button>
+        {/* Trailer Modal */}
+        {isTrailerModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex justify-center items-center p-4">
+            <div className="bg-gray-800 p-4 rounded-lg max-w-xl mx-auto">
+              <iframe
+                title="Movie Trailer"
+                src={`https://www.youtube.com/embed/${trailerKey}`}
+                frameBorder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full md:h-96"
+              ></iframe>
+              <button
+                onClick={closeTrailerModal}
+                className="mt-4 bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-sm shadow-lg"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
       </div>
-
       {/* Main Content */}
       <div className="px-4 py-2">
         {/* Movie Poster and Details */}
@@ -161,7 +236,7 @@ const MovieDetailPage = () => {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row justify-center md:justify-start space-y-3 sm:space-y-0 sm:space-x-3 my-4">
               <button className="flex items-center justify-center w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg shadow transition duration-300 ease-in-out text-sm font-medium">
-                <img
+                <Image
                   src="/icons/eye.svg"
                   alt="Watch Icon"
                   className="inline-block mr-2"
@@ -174,7 +249,7 @@ const MovieDetailPage = () => {
                 className="flex items-center justify-center w-full sm:w-auto px-6 py-3 bg-purple-600 hover:bg-purple-700
   rounded-lg shadow transition duration-300 ease-in-out text-sm font-medium"
               >
-                <img
+                <Image
                   src="/icons/bookmark.svg"
                   alt="Bookmark Icon"
                   className="inline-block mr-2"

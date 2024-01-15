@@ -14,6 +14,7 @@ interface Movie {
   overview: string;
   vote_average: number;
   budget: number;
+  trailerId: string;
   // Add other properties as needed
 }
 

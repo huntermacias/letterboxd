@@ -315,7 +315,7 @@ export default function Home() {
 
     <div className="border-t border-gray-700 mt-10 pt-8">
       <p className="text-center text-gray-400 text-sm">
-        &copy; {(new Date()).getFullYear()} Your Platform Name. All rights reserved.
+        &copy; {(new Date()).getFullYear()} Better Letterboxd. All rights reserved.
       </p>
     </div>
   </div>

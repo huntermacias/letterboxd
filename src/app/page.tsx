@@ -158,7 +158,7 @@ export default function Home() {
       </div>
 
       {/* Subtitle */}
-      <div className="text-white text-sm lg:text-lg font-semibold px-5 tracking-wider">
+      <div className="text-white text-2xl lg:text-lg font-semibold px-5 tracking-wider">
         Review or track film you’ve watched...
       </div>
 
@@ -186,10 +186,8 @@ export default function Home() {
 
         {/* Popular Lists This Month */}
         <section className="mt-10 px-5">
-          <h2 className="text-xl text-white font-bold mb-4">
-            Popular Lists This Month
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <h2 className="text-xl text-white font-bold mb-4">Popular Lists This Month</h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-center">
             {lists.map((list) => (
               <div
                 key={list.id}
@@ -279,7 +277,50 @@ export default function Home() {
       </div>
 
       {/* Footer or other content */}
-      {/* ... */}
+      <footer className="bg-[#262547] text-white py-10">
+  <div className="container mx-auto px-4">
+    <div className="flex flex-wrap justify-between">
+      {/* Footer Column 1 */}
+      <div className="w-full md:w-1/4 mb-6 md:mb-0">
+        <h4 className="font-bold text-lg mb-4">About</h4>
+        <p className="text-gray-400">Discover the best movies, watch trailers, read reviews, and more on our platform.</p>
+      </div>
+
+      {/* Footer Column 2 */}
+      <div className="w-full md:w-1/4 mb-6 md:mb-0">
+        <h4 className="font-bold text-lg mb-4">Quick Links</h4>
+        <ul>
+          <li className="mb-2"><a href="#" className="text-gray-400 hover:text-red-300">Home</a></li>
+          <li className="mb-2"><a href="#" className="text-gray-400 hover:text-red-300">Popular Movies</a></li>
+          <li><a href="#" className="text-gray-400 hover:text-red-300">Latest Reviews</a></li>
+        </ul>
+      </div>
+
+      {/* Footer Column 3 */}
+      <div className="w-full md:w-1/4 mb-6 md:mb-0">
+        <h4 className="font-bold text-lg mb-4">Follow Us</h4>
+        <div className="flex space-x-4">
+          <a href="#" className="text-gray-400 hover:text-red-300">Facebook</a>
+          <a href="#" className="text-gray-400 hover:text-red-300">Twitter</a>
+          <a href="#" className="text-gray-400 hover:text-red-300">Instagram</a>
+        </div>
+      </div>
+
+      {/* Footer Column 4 */}
+      <div className="w-full md:w-1/4">
+        <h4 className="font-bold text-lg mb-4">Contact</h4>
+        <p className="text-gray-400">For inquiries, please email us at support@example.com</p>
+      </div>
+    </div>
+
+    <div className="border-t border-gray-700 mt-10 pt-8">
+      <p className="text-center text-gray-400 text-sm">
+        &copy; {(new Date()).getFullYear()} Your Platform Name. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>
+
     </div>
   );
 }

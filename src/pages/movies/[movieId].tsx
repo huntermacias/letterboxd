@@ -87,8 +87,8 @@ const MovieDetailPage = () => {
   if (error) return <div className="text-center py-10">Error: {error}</div>;
   if (!movie) return <div className="text-center py-10">Loading...</div>;
   return (
-    <div className="bg-[#1F1D36] text-white">
-      {/* Hero Image with Trailer Button */}
+    <div className="bg-gray-900 text-white min-h-screen">
+      {/* Hero Image with Overlay and Trailer Button */}
       <div className="relative">
         <Image
           src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
@@ -96,9 +96,10 @@ const MovieDetailPage = () => {
           layout="responsive"
           width={700}
           height={293}
-          className="rounded-lg object-cover w-full"
+          className="rounded-t-xl object-cover w-full"
         />
-        <button className="absolute bottom-4 right-4 bg-red-600 px-4 py-2 rounded text-sm md:text-base">
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent rounded-t-xl" />
+        <button className="absolute bottom-4 right-4 bg-red-700 hover:bg-red-800 px-4 py-2 rounded shadow-lg transition duration-300 ease-in-out text-sm md:text-base">
           Watch Trailer
         </button>
       </div>
@@ -106,9 +107,9 @@ const MovieDetailPage = () => {
       {/* Main Content */}
       <div className="px-4 py-2">
         {/* Movie Poster and Details */}
-        <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
+        <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 mt-4">
           {/* Movie Poster */}
-          <div className="w-32 md:w-48 lg:w-64 mx-auto md:mx-0">
+          <div className="w-36 md:w-52 lg:w-64 mx-auto md:mx-0 shadow-lg rounded-lg overflow-hidden">
             <Image
               src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
               alt={`${movie?.title ?? "Movie"}`}
@@ -122,22 +123,28 @@ const MovieDetailPage = () => {
           <div className="flex-1">
             {/* Title, Release Date, Duration */}
             <div>
-              <h1 className="text-2xl font-bold text-center md:text-left">
+              <h1 className="text-3xl md:text-4xl font-bold text-center md:text-left">
                 {movie.title}
               </h1>
-              <p className="text-gray-400 text-center md:text-left text-sm">
+              <p className="text-gray-400 text-center md:text-left text-sm mt-1">
                 {movie.release_date} • {movie.runtime} mins
               </p>
             </div>
 
             {/* Rating and Genres */}
-            <div className="my-2 text-center md:text-left">
-              <StarRating rating={movie.vote_average / 2} />
-              <div className="flex justify-center md:justify-start flex-wrap gap-2 mt-1">
+
+            <div className="my-3 text-center md:text-left">
+              <div className="inline-flex items-center mb-1">
+                <StarRating rating={movie.vote_average / 2} />
+                <span className="ml-2 text-lg">
+                  {movie.vote_average.toFixed(1)}
+                </span>
+              </div>
+              <div className="flex justify-center md:justify-start flex-wrap gap-2">
                 {movie.genres.map((genre) => (
                   <span
                     key={genre.id}
-                    className="px-2 py-1 bg-gray-700 rounded-full text-xs"
+                    className="px-3 py-1 bg-gray-800 rounded-full text-xs font-medium"
                   >
                     {genre.name}
                   </span>
@@ -146,48 +153,53 @@ const MovieDetailPage = () => {
             </div>
 
             {/* Overview */}
-            <p className="mt-4 text-justify md:text-left text-sm">
-              {movie.overview}
-            </p>
+            <div className="bg-gray-800 p-4 rounded-lg mt-4">
+              <h3 className="text-xl font-semibold mb-2">Overview</h3>
+              <p className="text-gray-400 text-sm">{movie.overview}</p>
+            </div>
 
-            {/* Watched/My List Buttons */}
-            <div className="flex justify-center md:justify-start space-x-4 my-4">
-              <button className="flex items-center justify-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 transition-colors duration-200 rounded text-sm text-white shadow-lg">
-                <Image
-                  src="/icons/eye.svg" // Ensure this icon path is correct and accessible in the public/icons folder.
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row justify-center md:justify-start space-y-3 sm:space-y-0 sm:space-x-3 my-4">
+              <button className="flex items-center justify-center w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg shadow transition duration-300 ease-in-out text-sm font-medium">
+                <img
+                  src="/icons/eye.svg"
                   alt="Watch Icon"
-                  width={20}
-                  height={20}
                   className="inline-block mr-2"
+                  width={24}
+                  height={24}
                 />
                 Watched
               </button>
-              <button className="flex items-center justify-center px-4 py-2 bg-pink-600 hover:bg-pink-700 transition-colors duration-200 rounded text-sm text-white shadow-lg">
-                <Image
-                  src="/icons/bookmark.svg" // Ensure this icon path is correct and accessible in the public/icons folder.
+              <button
+                className="flex items-center justify-center w-full sm:w-auto px-6 py-3 bg-purple-600 hover:bg-purple-700
+  rounded-lg shadow transition duration-300 ease-in-out text-sm font-medium"
+              >
+                <img
+                  src="/icons/bookmark.svg"
                   alt="Bookmark Icon"
-                  width={20}
-                  height={20}
                   className="inline-block mr-2"
+                  width={24}
+                  height={24}
                 />
                 My List
               </button>
             </div>
 
-            {/* Rate This Movie */}
-            <div className="mt-4">
-              <h2 className="text-xl font-bold">Rate This Movie</h2>
-              <StarRating rating={0} />
+            {/* Rate and Review Section */}
+            <div className="mt-6">
+              <div className="flex items-center justify-center md:justify-start mb-4">
+                <h3 className="text-xl font-semibold mr-3">Rate This Movie:</h3>
+                <StarRating rating={0} />
+              </div>
+              <button className="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-600 text-sm px-6 py-3 rounded-lg shadow transition duration-300 ease-in-out">
+                Add a Review
+              </button>
             </div>
-
-            {/* Add a Review */}
-            <button className="bg-yellow-500 px-4 py-2 rounded my-4">
-              Add a Review
-            </button>
           </div>
         </div>
-        {/* User Reviews */}
-        <div className="mt-8">
+
+        {/* User Reviews Section */}
+        <div className="mt-10 px-4 py-2">
           <h2 className="text-2xl font-bold mb-4">User Reviews</h2>
           {/* Placeholder for user reviews */}
         </div>

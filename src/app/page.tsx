@@ -138,72 +138,58 @@ export default function Home() {
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto py-5">
         {/* Popular Films This Month */}
-        <h2 className="text-white text-lg font-semibold px-5 tracking-wider mt-10">
-          Popular Films This Month
-        </h2>
-        <div className="flex items-center mt-2">
-          <div className="flex overflow-x-auto space-x-4 px-4 scrollbar">
-            {/* Dynamic movie posters */}
+        <section className="mt-10 px-5">
+          <h2 className="text-xl text-white font-bold mb-4">Popular Films This Month</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {movies.map((movie) => (
-              <div key={movie.id} className="flex-shrink-0 ">
+              <div key={movie.id} className="flex-shrink-0 space-y-2">
                 <Image
-                  className="rounded-lg"
+                  className="rounded-lg transform hover:scale-105 transition duration-300"
                   src={`${BASE_IMAGE_URL}${movie.poster_path}`}
                   alt={movie.title}
-                  width={100}
-                  height={200}
+                  width={200}
+                  height={300}
                 />
               </div>
             ))}
           </div>
-        </div>
+        </section>
 
         {/* Popular Lists This Month */}
-        <h2 className="text-white text-lg font-semibold px-5 tracking-wider mt-10">
-          Popular Lists This Month
-        </h2>
-        <div className="flex items-center mt-4">
-          <div className="flex overflow-x-auto space-x-8 px-4 scrollbar">
+        <section className="mt-10 px-5">
+          <h2 className="text-xl text-white font-bold mb-4">Popular Lists This Month</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {lists.map((list) => (
-              <div key={list.id} className="space-y-4">
-                <div>
-                  <Image
-                    className="rounded-lg"
-                    src={`${BASE_IMAGE_URL}${list.poster_path}`}
-                    alt={list.name}
-                    width={100} // Adjust based on your layout
-                    height={200} // Adjust based on your layout
-                  />
-                  <h3 className="text-white text-sm mt-2 font-medium">
-                    {list.name}
-                  </h3>
-                </div>
-                <div className="flex items-center space-x-2">
+              <div key={list.id} className="bg-[#262547] p-4 rounded-lg shadow-lg">
+                <Image
+                  className="rounded-lg"
+                  src={`${BASE_IMAGE_URL}${list.poster_path}`}
+                  alt={list.name}
+                  width={200}
+                  height={300}
+                />
+                <h3 className="text-lg text-white mt-2">{list.name}</h3>
+                <div className="flex items-center mt-3">
                   <Image
                     className="rounded-full"
                     src={list.user.avatar}
                     alt={list.user.name}
                     width={30}
-                    height={30}
-                  />
-                  <div className="flex flex-col">
-                    <span className="text-red-300 text-xs tracking-wider">
-                      {list.user.name}
-                    </span>
-                    <div className="flex space-x-2 mt-1">
-                      <span className="text-blue-300 text-xs">
-                        ❤️ {list.likes}
-                      </span>
-                      <span className="text-white text-xs">
-                        💬 {list.comments}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+                    height={
+30}
+/>
+<div className="ml-2">
+<span className="text-sm text-white">{list.user.name}</span>
+<div className="flex items-center mt-1">
+<span className="text-xs text-blue-300 mr-2">❤️ {list.likes}</span>
+<span className="text-xs text-white">💬 {list.comments}</span>
+</div>
+</div>
+</div>
+</div>
+))}
+</div>
+</section>
 
             {/* Recent Friends’ Review */}
     <section className="mt-10 px-5">

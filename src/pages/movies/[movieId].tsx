@@ -139,7 +139,7 @@ const MovieDetailPage = () => {
   if (error) return <div className="text-center py-10">Error: {error}</div>;
   if (!movie) return <div className="text-center py-10">Loading...</div>;
   return (
-    <div className="bg-gray-900 text-white min-h-screen">
+    <div className="bg-gray-950 text-white min-h-screen">
       {/* Hero Image with Overlay and Trailer Button */}
       <div className="relative">
         <Image

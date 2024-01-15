@@ -59,105 +59,94 @@ export default function Home() {
 
   const BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w500";
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error loading movies</div>;
+  if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  if (error) return <div className="flex justify-center items-center h-screen text-red-500">Error loading movies</div>;
 
   return (
-    <div className="bg-[#1F1D36] w-full min-h-screen flex flex-col text-gray-300">
+    <div className="bg-gray-950 text-gray-300 min-h-screen flex flex-col">
       {/* Header Section */}
-      <div className="flex justify-between items-center p-5">
+      <header className="flex justify-between items-center p-5 bg-gray-900 rounded-b-xl shadow-md">
         {/* Greeting */}
-        <div className="text-3xl font-bold">
-          <span className="text-white">Hello, </span>
-          <span className="text-red-300">Amy</span>
-          <span className="text-white">!</span>
-        </div>
+        <h1 className="text-2xl font-bold text-white">
+          Hello, <span className="text-red-400">Amy</span>!
+        </h1>
 
         {/* User icon and notification */}
-        <div className="flex items-center">
-          <div className="w-11 h-11 bg-stone-300 rounded-full relative">
-            <Image
-              className="rounded-full"
-              src="/images/avatars/amy.jpg"
-              alt="Amy"
-              layout="fill"
-            />
-          </div>
-          <div className="absolute w-3 h-3 bg-green-600 rounded-full ml-8 mb-8"></div>
+        <div className="relative">
+          <Image
+            className="rounded-full"
+            src="/images/avatars/amy.jpg"
+            alt="User avatar"
+            width={44}
+            height={44}
+          />
+          <span className="absolute top-0 right-0 block h-3 w-3 bg-green-500 rounded-full ring-2 ring-white"></span>
         </div>
-      </div>
-
-      {/* Subtitle */}
-      <div className="text-white text-2xl lg:text-lg font-semibold px-5 tracking-wider">
-        Review or track film you’ve watched...
-      </div>
+      </header>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto py-5">
+      <main className="flex-1 overflow-y-auto">
+        {/* Popular Films Section */}
+        <section aria-labelledby="popular-films-heading" className="py-5">
+          <h2
+            id="popular-films-heading"
+            className="text-2xl font-bold text-white px-5 mb-4"
+          >
+            Popular Films This Month
+          </h2>
+          <div className="flex overflow-x-auto gap-4 px-5">
+            {movies.map((movie) => (
+              <div key={movie.id} className="w-40 md:w-64 flex-shrink-0">
+                <Link href={`/movies/${movie.id}`}>
+                  <Image
+                    className="rounded-xl transform transition duration-300 hover:scale-105"
+                    src={`${BASE_IMAGE_URL}${movie.poster_path}`}
+                    alt={movie.title}
+                    width={160}
+                    height={240}
+                    layout="responsive"
+                  />
+                </Link>
+              </div>
+            ))}
+          </div>
+        </section>
 
-        
-        {/* Popular Films This Month */}
-        <section className="mt-10 px-5">
-  <h2 className="text-xl text-white font-bold mb-4">
-    Popular Films This Month
-  </h2>
-  <div className="flex overflow-x-auto gap-4">
-    {movies.map((movie) => (
-      <div key={movie.id} className="min-w-[45%] md:min-w-[22%] lg:min-w-[15%] flex-shrink-0 space-y-2">
-        <div className="relative pb-[150%]">
-          <Link href={`/movies/${movie.id}`}>
-            <Image
-              className="rounded-lg absolute inset-0 w-full h-full object-cover transform transition duration-300 hover:scale-105"
-              src={`${BASE_IMAGE_URL}${movie.poster_path}`}
-              alt={movie.title}
-              layout="fill"
-            />
-
-          </Link>
-        </div>
-      </div>
-    ))}
-  </div>
-</section>
-
-
-        {/* Popular Lists This Month */}
-        <section className="mt-10 px-5">
-          <h2 className="text-xl text-white font-bold mb-4">
+        {/* Popular Lists Section */}
+        <section aria-labelledby="popular-lists-heading" className="py-5">
+          <h2
+            id="popular-lists-heading"
+            className="text-2xl font-bold text-white px-5 mb-4"
+          >
             Popular Lists This Month
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-5">
             {lists.map((list) => (
               <div
                 key={list.id}
-                className="bg-[#262547] p-4 rounded-lg shadow-lg"
+                className="bg-gray-800 p-4 rounded-lg shadow-lg"
               >
                 <Image
-                  className="rounded-lg"
+                  className="rounded-lg mb-3"
                   src={`${BASE_IMAGE_URL}${list.poster_path}`}
                   alt={list.name}
                   width={200}
                   height={300}
                 />
-                <h3 className="text-lg text-white mt-2">{list.name}</h3>
-                <div className="flex items-center mt-3">
+                <h3 className="text-lg text-white mb-2">{list.name}</h3>
+                <div className="flex items-center">
                   <Image
-                    className="rounded-full"
+                    className="rounded-full mr-2"
                     src={list.user.avatar}
                     alt={list.user.name}
                     width={30}
                     height={30}
                   />
-                  <div className="ml-2">
-                    <span className="text-sm text-white">{list.user.name}</span>
-                    <div className="flex items-center mt-1">
-                      <span className="text-xs text-blue-300 mr-2">
-                        ❤️ {list.likes}
-                      </span>
-                      <span className="text-xs text-white">
-                        💬 {list.comments}
-                      </span>
-                    </div>
+                  <div>
+                    <p className="text-sm text-white">{list.user.name}</p>
+                    <p className="text-xs text-gray-400">
+                      Likes: {list.likes} Comments: {list.comments}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -165,11 +154,14 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Recent Friends’ Review */}
-        <Reviews />
-      </div>
+        {/* Recent Friends' Reviews */}
+        <hr className="border-gray-700 mt-2" />
 
-      {/* Footer or other content */}
+        <Reviews />
+      </main>
+
+      {/* Footer */}
+      <hr className="border-gray-700 mt-2" />
       <Footer />
     </div>
   );

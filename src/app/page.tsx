@@ -24,7 +24,7 @@ export default function Home() {
         stars.push(<span key={i} className="text-gray-300">⭐</span>); // Customize this for an empty star icon
       }
     }
-    return <div>{stars}</div>;
+    return <div className="flex space-x-1">{stars}</div>;
   };
   
 
@@ -94,7 +94,7 @@ const reviews: Review[] = [
   if (error) return <div>Error loading movies</div>;
 
   return (
-    <div className="bg-[#1F1D36] w-full h-screen flex flex-col">
+    <div className="bg-[#1F1D36] w-full min-h-screen flex flex-col text-gray-300">
       {/* Header Section */}
       <div className="flex justify-between items-center p-5">
         {/* Greeting */}
@@ -124,7 +124,7 @@ const reviews: Review[] = [
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto py-5">
         {/* Popular Films This Month */}
         <h2 className="text-white text-lg font-semibold px-5 tracking-wider mt-10">
           Popular Films This Month

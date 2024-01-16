@@ -103,7 +103,7 @@ export default function Home() {
           className="text-gray-300 hover:text-white ml-2"
         >
           {/* Icon or text to represent menu toggle */}
-          <span className="text-2xl">&#9776;</span>{" "}
+          {/* <span className="text-2xl">&#9776;</span>{" "} */}
           {/* This is a simple hamburger icon */}
         </button>
         </div>

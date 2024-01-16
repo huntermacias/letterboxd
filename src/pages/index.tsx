@@ -7,11 +7,14 @@ import { List } from "../types/list";
 import Footer from "../components/Footer";
 import Reviews from "../components/Reviews";
 import Link from "next/link";
+import Sidebar from "../components/BottomNav";
+import BottomNavBar from "../components/BottomNav";
 
 export default function Home() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   // Dummy data for lists
   const lists: List[] = [
@@ -21,6 +24,7 @@ export default function Home() {
       user: {
         id: 101,
         name: "@amylainez",
+        favorite_movies: ["695721"],
         avatar: "/images/avatars/amy.jpg", // Replace with actual avatar path
       },
       likes: 120,
@@ -32,6 +36,7 @@ export default function Home() {
       name: "Top Sci-Fi Adventures",
       user: {
         id: 102,
+        favorite_movies: [],
         name: "@huntermacias",
         avatar: "/images/avatars/me.jpg", // Replace with actual avatar path
       },
@@ -59,20 +64,32 @@ export default function Home() {
 
   const BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w500";
 
-  if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
-  if (error) return <div className="flex justify-center items-center h-screen text-red-500">Error loading movies</div>;
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Loading...
+      </div>
+    );
+  if (error)
+    return (
+      <div className="flex justify-center items-center h-screen text-red-500">
+        Error loading movies
+      </div>
+    );
 
   return (
     <div className="bg-gray-950 text-gray-300 min-h-screen flex flex-col">
       {/* Header Section */}
       <header className="flex justify-between items-center p-5 bg-gray-900 rounded-b-xl shadow-md">
+       
         {/* Greeting */}
         <h1 className="text-2xl font-bold text-white">
           Hello, <span className="text-red-400">Amy</span>!
         </h1>
+       
 
         {/* User icon and notification */}
-        <div className="relative">
+        <div className="relative flex">
           <Image
             className="rounded-full"
             src="/images/avatars/amy.jpg"
@@ -80,7 +97,15 @@ export default function Home() {
             width={44}
             height={44}
           />
-          <span className="absolute top-0 right-0 block h-3 w-3 bg-green-500 rounded-full ring-2 ring-white"></span>
+          {/* <span className="absolute top-0 right-0 block h-3 w-3 bg-green-500 rounded-full ring-2 ring-white"></span> */}
+          <button
+          onClick={() => setSidebarOpen(!isSidebarOpen)}
+          className="text-gray-300 hover:text-white ml-2"
+        >
+          {/* Icon or text to represent menu toggle */}
+          <span className="text-2xl">&#9776;</span>{" "}
+          {/* This is a simple hamburger icon */}
+        </button>
         </div>
       </header>
 
@@ -134,10 +159,11 @@ export default function Home() {
                   height={300}
                 />
                 <h3 className="text-lg text-white mb-2">{list.name}</h3>
+
                 <div className="flex items-center">
                   <Image
                     className="rounded-full mr-2"
-                    src={list.user.avatar}
+                    src={list.user.avatar!}
                     alt={list.user.name}
                     width={30}
                     height={30}
@@ -162,7 +188,8 @@ export default function Home() {
 
       {/* Footer */}
       <hr className="border-gray-700 mt-2" />
-      <Footer />
+      {/* <BottomNavBar /> */}
+      {/* <Footer /> */}
     </div>
   );
 }

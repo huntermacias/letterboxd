@@ -2,15 +2,8 @@
 import { useEffect, useState } from "react";
 import Movie from "@/types/movie";
 import { usePathname } from "next/navigation";
-// import { StarIcon } from '@heroicons/react/solid'; // Ensure you have `@heroicons/react` installed
 import Image from "next/image";
-import { ImageConfigContext } from "next/dist/shared/lib/image-config-context.shared-runtime";
-
-// This is a placeholder for the StarRating component. You should implement it according to your needs.
-// const StarRating = ({ rating: }) => {
-//   // Your star rating logic here...
-//   return <div>{/* Your stars */}</div>;
-// };
+import Link from "next/link";
 
 const MovieDetailPage = () => {
   const pathname = usePathname();
@@ -18,6 +11,7 @@ const MovieDetailPage = () => {
   const [error, setError] = useState<string>("");
   const [trailerKey, setTrailerKey] = useState("");
   const [isTrailerModalOpen, setTrailerModalOpen] = useState(false);
+  const [relatedMovies, setRelatedMovies] = useState([]);
 
   // Function to open the trailer modal
   const openTrailerModal = () => {
@@ -29,6 +23,7 @@ const MovieDetailPage = () => {
     setTrailerModalOpen(false);
   };
 
+  // Function to return a star rating
   const StarRating = ({ rating }: { rating: number }) => {
     let stars = [];
     for (let i = 1; i <= Math.round(rating); i++) {
@@ -74,6 +69,7 @@ const MovieDetailPage = () => {
       <div className="flex space-x-1 items-center justify-center">{stars}</div>
     );
   };
+
   useEffect(() => {
     const movieId = pathname.split("/").pop();
     if (!movieId) {
@@ -110,9 +106,21 @@ const MovieDetailPage = () => {
     if (movieId) {
       fetchMovieData();
       fetchTrailerKey();
+      fetchRelatedMovies(movieId); // New function to fetch related movies
     }
   }, [pathname]);
 
+  const fetchRelatedMovies = async (movieId: string) => {
+    try {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=6500efce781df0e3504d6dd24db9a472`
+      );
+      const data = await response.json();
+      setRelatedMovies(data.results);
+    } catch (error) {
+      console.error("Failed to fetch related movies:", error);
+    }
+  };
   // Function to fetch trailer video ID
   const fetchTrailerId = async (movieId: string) => {
     const url = `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=6500efce781df0e3504d6dd24db9a472`;
@@ -140,7 +148,7 @@ const MovieDetailPage = () => {
   if (!movie) return <div className="text-center py-10">Loading...</div>;
   return (
     <div className="bg-gray-950 text-white min-h-screen">
-      {/* Hero Image with Overlay and Trailer Button */}
+      {/* Hero Image Section */}
       <div className="relative">
         <Image
           src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
@@ -148,16 +156,15 @@ const MovieDetailPage = () => {
           layout="responsive"
           width={700}
           height={293}
-          className="rounded-t-xl object-cover w-full"
+          className="rounded-t-lg object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent rounded-t-xl" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-gray-900 to-transparent" />
         <button
           onClick={openTrailerModal}
-          className="absolute bottom-4 right-4 bg-red-700 hover:bg-red-800 px-4 py-2 rounded shadow-lg transition duration-300 ease-in-out text-sm md:text-base"
+          className="absolute bottom-4 right-4 bg-red-600 hover:bg-red-700 px-3 py-2 rounded text-sm font-medium shadow"
         >
           Watch Trailer
         </button>
-        {/* Trailer Modal */}
         {isTrailerModalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex justify-center items-center p-4">
             <div className="bg-gray-800 p-4 rounded-lg max-w-xl mx-auto">
@@ -179,47 +186,36 @@ const MovieDetailPage = () => {
           </div>
         )}
       </div>
+
       {/* Main Content */}
-      <div className="px-4 py-2">
-        {/* Movie Poster and Details */}
-        <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 mt-4">
+      <div className="p-4">
+        <div className="flex flex-col md:flex-row gap-4">
           {/* Movie Poster */}
-          <div className="w-36 md:w-52 lg:w-64 mx-auto md:mx-0 shadow-lg rounded-lg overflow-hidden">
+          <div className="w-full md:w-1/3 lg:w-1/4">
             <Image
               src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
               alt={`${movie?.title ?? "Movie"}`}
               width={200}
               height={300}
-              className="rounded-lg"
+              className="rounded shadow-lg"
             />
           </div>
 
           {/* Movie Details */}
           <div className="flex-1">
-            {/* Title, Release Date, Duration */}
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-center md:text-left">
-                {movie.title}
-              </h1>
-              <p className="text-gray-400 text-center md:text-left text-sm mt-1">
-                {movie.release_date} • {movie.runtime} mins
-              </p>
-            </div>
+            <h1 className="text-2xl md:text-3xl font-bold">{movie.title}</h1>
+            <p className="text-gray-400 my-2">
+              {movie.release_date} • {movie.runtime} mins
+            </p>
 
             {/* Rating and Genres */}
-
-            <div className="my-3 text-center md:text-left">
-              <div className="inline-flex items-center mb-1">
-                <StarRating rating={movie.vote_average / 2} />
-                <span className="ml-2 text-lg">
-                  {movie.vote_average.toFixed(1)}
-                </span>
-              </div>
-              <div className="flex justify-center md:justify-start flex-wrap gap-2">
+            <div className="flex items-center gap-2">
+              <StarRating rating={movie.vote_average / 2} />
+              <div className="flex flex-wrap gap-2">
                 {movie.genres.map((genre) => (
                   <span
                     key={genre.id}
-                    className="px-3 py-1 bg-gray-800 rounded-full text-xs font-medium"
+                    className="px-3 py-1 bg-gray-700 rounded-full text-xs"
                   >
                     {genre.name}
                   </span>
@@ -228,33 +224,30 @@ const MovieDetailPage = () => {
             </div>
 
             {/* Overview */}
-            <div className="bg-gray-800 p-4 rounded-lg mt-4">
-              <h3 className="text-xl font-semibold mb-2">Overview</h3>
-              <p className="text-gray-400 text-sm">{movie.overview}</p>
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold">Overview</h3>
+              <p className="text-gray-400 mt-2">{movie.overview}</p>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row justify-center md:justify-start space-y-3 sm:space-y-0 sm:space-x-3 my-4">
-              <button className="flex items-center justify-center w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg shadow transition duration-300 ease-in-out text-sm font-medium">
+            <div className="flex gap-4 mt-4">
+              <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded shadow text-sm">
                 <Image
                   src="/icons/eye.svg"
-                  alt="Watch Icon"
+                  alt="Watched Icon"
+                  width={20}
+                  height={20}
                   className="inline-block mr-2"
-                  width={24}
-                  height={24}
                 />
                 Watched
               </button>
-              <button
-                className="flex items-center justify-center w-full sm:w-auto px-6 py-3 bg-purple-600 hover:bg-purple-700
-  rounded-lg shadow transition duration-300 ease-in-out text-sm font-medium"
-              >
+              <button className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded shadow text-sm">
                 <Image
                   src="/icons/bookmark.svg"
                   alt="Bookmark Icon"
+                  width={20}
+                  height={20}
                   className="inline-block mr-2"
-                  width={24}
-                  height={24}
                 />
                 My List
               </button>
@@ -262,21 +255,34 @@ const MovieDetailPage = () => {
 
             {/* Rate and Review Section */}
             <div className="mt-6">
-              <div className="flex items-center justify-center md:justify-start mb-4">
-                <h3 className="text-xl font-semibold mr-3">Rate This Movie:</h3>
-                <StarRating rating={0} />
-              </div>
-              <button className="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-600 text-sm px-6 py-3 rounded-lg shadow transition duration-300 ease-in-out">
+              <h3 className="text-lg font-semibold">Rate This Movie:</h3>
+              <StarRating rating={0} />
+              <button className="bg-yellow-500 hover:bg-yellow-600 mt-4 px-4 py-2 rounded shadow text-sm">
                 Add a Review
               </button>
             </div>
           </div>
         </div>
 
-        {/* User Reviews Section */}
-        <div className="mt-10 px-4 py-2">
-          <h2 className="text-2xl font-bold mb-4">User Reviews</h2>
-          {/* Placeholder for user reviews */}
+        {/* Related Movies Section */}
+        <div className="mt-10">
+          <h2 className="text-2xl font-bold">Related Movies</h2>
+          <div className="flex overflow-x-auto gap-4 mt-4">
+            {relatedMovies.map((relatedMovie: Movie) => (
+              <div key={relatedMovie.id} className="min-w-[150px]">
+                   <Link href={`/movies/${relatedMovie.id}`}>
+                <Image
+                  src={`https://image.tmdb.org/t/p/w500${relatedMovie.poster_path}`}
+                  alt={relatedMovie.title}
+                  width={150}
+                  height={225}
+                  className="rounded-lg"
+                />
+                </Link>
+                <h3 className="text-sm mt-2">{relatedMovie.title}</h3>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

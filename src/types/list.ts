@@ -6,7 +6,8 @@ export interface List {
 	user: {
 	  id: number;
 	  name: string;
-	  avatar: string; // URL to the user's avatar
+	  favorite_movies?: string[];
+	  avatar?: string; // URL to the user's avatar
 	};
 	likes: number;
 	comments: number;

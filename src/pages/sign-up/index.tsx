@@ -11,7 +11,12 @@ const SignUpPage = () => (
           <h1 className="font-bold text-2xl text-gray-300 mt-2">Join FrameRate</h1>
           <p className="text-gray-600 mt-2">Create your account to get started!</p>
         </div>
-        <SignUp path="/sign-up" routing="path" signInUrl="/sign-in" />
+        <SignUp
+          path="/sign-up"
+          routing="path"
+          signInUrl="/sign-in"
+          afterSignUpUrl="/" 
+        />
       </div>
     </div>
   </div>

@@ -6,10 +6,13 @@ import RootLayout from "../components/layout"; // Use the correct name of your l
 import type { AppProps } from "next/app";
 import BottomNavBar from "@/components/BottomNav";
 import Footer from "@/components/Footer";
+import Head from "next/head";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
+    <Head>
+
       <title>Welcome to FrameRate - Your Ultimate Cinema Companion</title>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta property="og:type" content="website" />
@@ -39,6 +42,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       />
       <meta property="twitter:image" content="/favicon.ico" />
       <link rel="icon" href="/favicon.ico" />
+    </Head>
 
       <ClerkProvider {...pageProps} publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
         <RootLayout>

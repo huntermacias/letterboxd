@@ -6,7 +6,7 @@ import Movie from "@/types/movie";
 import { List } from "../types/list";
 import Reviews from "../components/Reviews";
 import Link from "next/link";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 
 
 
@@ -19,6 +19,8 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const { user } = useUser(); // Use Clerk's useUser hook
+
 
   // Dummy data for lists
   const lists: List[] = [
@@ -88,7 +90,7 @@ export default function Home() {
 
         {/* Greeting */}
         <h1 className="text-2xl font-bold text-white">
-          Hello, <span className="text-red-400">Amy</span>!
+        Hello, <span className="text-red-400">{user ? `@${user.username}` : "Guest"}</span>!
         </h1>
       <UserButton afterSignOutUrl="/" />
       </header>

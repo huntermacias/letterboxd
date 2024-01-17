@@ -1,16 +1,20 @@
 "use client";
 import { fetchPopularMovies } from "@/services/movieService";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Movie from "@/types/movie";
 import { List } from "../types/list";
-import Footer from "../components/Footer";
 import Reviews from "../components/Reviews";
 import Link from "next/link";
-import Sidebar from "../components/BottomNav";
-import BottomNavBar from "../components/BottomNav";
+import { UserButton } from "@clerk/nextjs";
+
+
+
 
 export default function Home() {
+
+  
+  
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -81,32 +85,12 @@ export default function Home() {
     <div className="bg-gray-950 text-gray-300 min-h-screen flex flex-col">
       {/* Header Section */}
       <header className="flex justify-between items-center p-5 bg-gray-900 rounded-b-xl shadow-md">
-       
+
         {/* Greeting */}
         <h1 className="text-2xl font-bold text-white">
           Hello, <span className="text-red-400">Amy</span>!
         </h1>
-       
-
-        {/* User icon and notification */}
-        <div className="relative flex">
-          <Image
-            className="rounded-full"
-            src="/images/avatars/amy.jpg"
-            alt="User avatar"
-            width={44}
-            height={44}
-          />
-          {/* <span className="absolute top-0 right-0 block h-3 w-3 bg-green-500 rounded-full ring-2 ring-white"></span> */}
-          <button
-          onClick={() => setSidebarOpen(!isSidebarOpen)}
-          className="text-gray-300 hover:text-white ml-2"
-        >
-          {/* Icon or text to represent menu toggle */}
-          {/* <span className="text-2xl">&#9776;</span>{" "} */}
-          {/* This is a simple hamburger icon */}
-        </button>
-        </div>
+      <UserButton afterSignOutUrl="/" />
       </header>
 
       {/* Main Content */}
@@ -132,6 +116,8 @@ export default function Home() {
                     layout="responsive"
                   />
                 </Link>
+                {/* <UserButton afterSignOutUrl="/" /> */}
+
               </div>
             ))}
           </div>

@@ -4,8 +4,23 @@ import Movie from "@/types/movie";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { UserButton, currentUser } from "@clerk/nextjs";
 
-const MovieDetailPage = () => {
+
+export async function getServerSideProps(context: any) {
+  try {
+    const user = await currentUser(); // Await the resolved value of currentUser()
+    return { props: { user } };
+  } catch (error:any) {
+    console.error("Error fetching current user:", error);
+    // Handle the error as appropriate for your app
+    return { props: { error: error.message } };
+  }
+}
+
+
+const MovieDetailPage = (user:any) => {
+
   const pathname = usePathname();
   const [movie, setMovie] = useState<Movie>();
   const [error, setError] = useState<string>("");
@@ -193,6 +208,7 @@ const MovieDetailPage = () => {
 
       {/* Main Content */}
       <div className="p-4">
+        <UserButton />
         <div className="flex flex-col md:flex-row gap-4">
           {/* Movie Poster */}
           <div className="w-full md:w-1/3 lg:w-1/4">

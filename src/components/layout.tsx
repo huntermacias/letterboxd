@@ -1,15 +1,20 @@
-import React from 'react';
-import BottomNavBar from './BottomNav';
-import Footer from './Footer';
+import React from "react";
+import BottomNavBar from "./BottomNav";
+import Footer from "./Footer";
+// import { ClerkProvider } from "@clerk/nextjs";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <div>
-      {children}
-      <BottomNavBar />
-      <Footer />
-
-  
-    </div> // Just return a div or fragment wrapping children
+    // <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
+      <div>
+        {children}
+        <BottomNavBar />
+        <Footer />
+      </div>
+    // </ClerkProvider>
   );
 }

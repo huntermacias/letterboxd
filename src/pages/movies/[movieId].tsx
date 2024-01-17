@@ -12,6 +12,8 @@ const MovieDetailPage = () => {
   const [trailerKey, setTrailerKey] = useState("");
   const [isTrailerModalOpen, setTrailerModalOpen] = useState(false);
   const [relatedMovies, setRelatedMovies] = useState([]);
+  const [leadActorMovies, setLeadActorMovies] = useState([]);
+  const [leadActorName, setLeadActorName] = useState("");
 
   // Function to open the trailer modal
   const openTrailerModal = () => {
@@ -76,16 +78,24 @@ const MovieDetailPage = () => {
       setError("Movie ID not found.");
       return;
     }
-    const fetchMovieData = async () => {
+    const fetchMovieAndCast = async (movieId: string) => {
       try {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}?api_key=6500efce781df0e3504d6dd24db9a472`
+        // Fetch movie details, which includes the cast
+        const movieResponse = await fetch(
+          `https://api.themoviedb.org/3/movie/${movieId}?api_key=6500efce781df0e3504d6dd24db9a472&append_to_response=credits`
         );
-        if (!response.ok) {
-          throw new Error(`API call failed: ${response.status}`);
+        if (!movieResponse.ok) {
+          throw new Error(`API call failed: ${movieResponse.status}`);
         }
-        const data = await response.json();
-        setMovie(data);
+        const movieData = await movieResponse.json();
+        setMovie(movieData);
+
+        // Assume the first cast member is the lead actor
+        const leadActor = movieData.credits.cast[0]; // Assuming the lead actor is the first listed
+        if (leadActor) {
+          setLeadActorName(leadActor.name); // Store the lead actor's name
+          fetchLeadActorMovies(leadActor.id);
+        }
       } catch (err: any) {
         setError(err.message || "An error occurred");
       }
@@ -104,7 +114,7 @@ const MovieDetailPage = () => {
     };
 
     if (movieId) {
-      fetchMovieData();
+      fetchMovieAndCast(movieId); // Replacing the original fetchMovieData call
       fetchTrailerKey();
       fetchRelatedMovies(movieId); // New function to fetch related movies
     }
@@ -121,28 +131,22 @@ const MovieDetailPage = () => {
       console.error("Failed to fetch related movies:", error);
     }
   };
-  // Function to fetch trailer video ID
-  const fetchTrailerId = async (movieId: string) => {
-    const url = `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=6500efce781df0e3504d6dd24db9a472`;
-    const response = await fetch(url);
-    const data = await response.json();
-    // Filter for official trailers and extract the YouTube video key
-    const trailer = data.results.find(
-      (video: { type: string; site: string }) =>
-        video.type === "Trailer" && video.site === "YouTube"
-    );
-    return trailer ? trailer.key : null;
-  };
 
-  // Usage within useEffect or a similar hook
-  useEffect(() => {
-    const movieId = pathname.split("/").pop();
-    if (movieId) {
-      fetchTrailerId(movieId).then((trailerId) => {
-        // Now you can use `trailerId` to embed the trailer or set up a link
-      });
+  // Fetch lead actor's movies
+  const fetchLeadActorMovies = async (actorId: number) => {
+    try {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/person/${actorId}/movie_credits?api_key=6500efce781df0e3504d6dd24db9a472`
+      );
+      if (!response.ok) {
+        throw new Error(`API call failed: ${response.status}`);
+      }
+      const data = await response.json();
+      setLeadActorMovies(data.cast); // Assuming you want the movies they've acted in
+    } catch (error) {
+      console.error("Failed to fetch lead actor's movies:", error);
     }
-  }, [pathname]);
+  };
 
   if (error) return <div className="text-center py-10">Error: {error}</div>;
   if (!movie) return <div className="text-center py-10">Loading...</div>;
@@ -267,19 +271,40 @@ const MovieDetailPage = () => {
         {/* Related Movies Section */}
         <div className="mt-10">
           <h2 className="text-2xl font-bold">Related Movies</h2>
-          <div className="flex overflow-x-auto gap-4 mt-4">
+          <div className="flex overflow-x-auto gap-4 mt-4 ">
             {relatedMovies.map((relatedMovie: Movie) => (
               <div key={relatedMovie.id} className="min-w-[150px]">
-                   <Link href={`/movies/${relatedMovie.id}`}>
-                <Image
-                  src={`https://image.tmdb.org/t/p/w500${relatedMovie.poster_path}`}
-                  alt={relatedMovie.title}
-                  width={150}
-                  height={225}
-                  className="rounded-lg"
-                />
+                <Link href={`/movies/${relatedMovie.id}`}>
+                  <Image
+                    src={`https://image.tmdb.org/t/p/w500${relatedMovie.poster_path}`}
+                    alt={relatedMovie.title}
+                    width={150}
+                    height={225}
+                    className="rounded-lg"
+                  />
                 </Link>
                 <h3 className="text-sm mt-2">{relatedMovie.title}</h3>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-10">
+          <h2 className="text-2xl font-bold">{leadActorName} is also seen in:</h2>
+          <div className="flex overflow-x-auto gap-4 mt-4 scrollbar">
+            {leadActorMovies.map((movie: Movie) => (
+              <div key={movie.id} className="min-w-[150px]">
+                <Link href={`/movies/${movie.id}`}>
+                  
+                  <Image
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    alt={movie.title}
+                    width={150}
+                    height={225}
+                    className="rounded-lg cursor-pointer"
+                  />
+                </Link>
+                <h3 className="text-sm mt-2">{movie.title}</h3>
               </div>
             ))}
           </div>

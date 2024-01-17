@@ -44,13 +44,13 @@ function MyApp({ Component, pageProps }: AppProps) {
       <link rel="icon" href="/favicon.ico" />
     </Head>
 
-      <ClerkProvider {...pageProps} publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
+      {/* <ClerkProvider {...pageProps} publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}> */}
         <RootLayout>
           <Component {...pageProps} />
           <BottomNavBar />
         <Footer />
         </RootLayout>
-      </ClerkProvider>
+      {/* </ClerkProvider> */}
     </>
   );
 }

@@ -3,12 +3,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { Rating } from "react-simple-star-rating";
 
 import { Calendar } from "@/components/ui/calendar";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Movie from "@/types/movie";
+import { UserButton } from "@clerk/nextjs";
 // import debounce from 'lodash.debounce'; // You might need to install lodash.debounce
 
 const Search = () => {
@@ -79,6 +79,8 @@ const Search = () => {
   return (
     <div className="flex items-center p-2 hover:bg-gray-800 cursor-pointer border-b border-indigo-700">
       <div className="flex-none w-16 h-24 relative">
+      <UserButton afterSignOutUrl="/" />
+
         <Image
           src={imageUrl}
           alt={movie.title}

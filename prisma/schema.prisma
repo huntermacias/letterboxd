@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model User {
+  id             Int       @id @default(autoincrement())
+  clerkUserId  	 String?   @unique
+  email          String    @unique
+  username       String?
+  password       String
+  imageUrl 	 	 String?
+  role           UserRole  @default(USER)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  reviews        Review[]
+  favorites      Movie[]   @relation("UserFavorites")
+  likedMovieLists MovieList[] @relation("UserLikedLists")
+  comments       Comment[]
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  body      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  userId    Int
+  reviewId  Int
+  user      User      @relation(fields: [userId], references: [id])
+  review    Review    @relation(fields: [reviewId], references: [id])
+}
+
+model Review {
+  id        Int       @id @default(autoincrement())
+  movieId   Int
+  body      String
+  rating    Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  userId    Int
+  comments  Comment[] 
+  user      User      @relation(fields: [userId], references: [id])
+  movie     Movie     @relation(fields: [movieId], references: [id])
+}
+
+model Movie {
+  id         Int         @id @default(autoincrement())
+  title      String
+  poster     String
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  reviews    Review[]
+  movieLists MovieList[]
+  favoritedBy User[]     @relation("UserFavorites")
+}
+
+model MovieList {
+  id        Int       @id @default(autoincrement())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  userId    Int       
+  movies    Movie[]  
+  likedBy   User[]    @relation("UserLikedLists")
+}

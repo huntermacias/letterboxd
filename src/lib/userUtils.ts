@@ -9,7 +9,7 @@ export const getUserByExternalId = async (externalUserId: string) => {
     }
 
     const user = await db.user.findUnique({
-        where: { externalUserId: self.id },
+        where: { clerkUserId: self.id },
     });
 
     if (!user) {

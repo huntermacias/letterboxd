@@ -6,11 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma:generate": "npx dotenv -e .env.local -- prisma generate",
+    "prisma:migrate": "npx dotenv -e .env.local -- prisma migrate dev",
+    "prisma:studio": "npx dotenv -e .env.local -- prisma studio",
+    "migrate": "npx dotenv -e .env.local -- prisma migrate deploy"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.3",
     "@heroicons/react": "^2.1.1",
+    "@prisma/client": "^5.8.1",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
     "@types/react-star-ratings": "^2.3.3",
@@ -24,6 +29,7 @@
     "react-day-picker": "^8.10.0",
     "react-dom": "^18",
     "react-simple-star-rating": "^5.1.7",
+    "svix": "^1.15.0",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7"
   },
@@ -33,9 +39,11 @@
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "autoprefixer": "^10.4.16",
+    "dotenv-cli": "^7.3.0",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
     "postcss": "^8.4.33",
+    "prisma": "^5.8.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

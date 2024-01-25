@@ -3,7 +3,6 @@ import { db } from '@/lib/db';
 export async function getReviews() {
   try {
 	
-	console.log('fetching reviews...')
     const reviews = await db.review.findMany({
       select: {
         id: true,
@@ -14,7 +13,6 @@ export async function getReviews() {
         clerkUserId: true
       }
     });
-	console.log('reviewsss: ', reviews)
     // Log the number of reviews fetched
     console.log(`Fetched ${reviews.length} reviews from the database`);
 

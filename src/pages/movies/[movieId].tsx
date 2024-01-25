@@ -144,6 +144,9 @@ export async function getServerSideProps(context: any) {
     const auth = await getAuth(context.req);
 
     const reviews = await db.review.findMany({
+      include: {
+        user: true, 
+      },
       orderBy: {
         createdAt: "desc",
       },

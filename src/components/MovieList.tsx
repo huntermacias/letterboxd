@@ -1,7 +1,7 @@
 import React from 'react';
 import MovieComponent from './MovieComponent';
 
-const MovieList = ({ title, movies }: { title: string, movies: any[] }) => {
+const MovieList = ({ title, movies = [] }: { title: string, movies: any[] }) => {
   // Check if movies is defined and is an array
   const isMoviesArray = Array.isArray(movies);
 

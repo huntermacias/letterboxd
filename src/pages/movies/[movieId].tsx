@@ -24,7 +24,7 @@ const MovieDetailPage = ({ user, reviews }: MovieDetailPageProps) => {
   const [leadActorMovies, setLeadActorMovies] = useState([]);
   const [leadActorName, setLeadActorName] = useState("");
   const API_KEY = process.env.NEXT_PUBLIC_MOVIE_API_KEY;
-  console.log('API_KEY', API_KEY);
+  // console.log('API_KEY', API_KEY);
 
   useEffect(() => {
     const movieId = pathname.split("/").pop();
@@ -127,10 +127,12 @@ const MovieDetailPage = ({ user, reviews }: MovieDetailPageProps) => {
           {/* Movie Details */}
           <MovieDetails movie={movie} />
         </div>
-          <ReviewsComponent reviews={reviews} />
 
-        <MovieList title="Related Movies" movies={relatedMovies} />
-
+        <ReviewsComponent reviews={reviews} />
+        <MovieList 
+          title="Related Movies" 
+          movies={relatedMovies} 
+        />
         <MovieList
           title={`${leadActorName} is also seen in:`}
           movies={leadActorMovies}

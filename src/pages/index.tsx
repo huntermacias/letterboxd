@@ -8,19 +8,12 @@ import Reviews from "../components/Reviews";
 import Link from "next/link";
 import { UserButton, useUser } from "@clerk/nextjs";
 
-
-
-
 export default function Home() {
-
-  
-  
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const { user } = useUser(); // Use Clerk's useUser hook
-
+  const { user } = useUser(); 
 
   // Dummy data for lists
   const lists: List[] = [
@@ -87,12 +80,15 @@ export default function Home() {
     <div className="bg-gray-950 text-gray-300 min-h-screen flex flex-col">
       {/* Header Section */}
       <header className="flex justify-between items-center p-5 bg-gray-900 rounded-b-xl shadow-md">
-
         {/* Greeting */}
         <h1 className="text-2xl font-bold text-white">
-        Hello, <span className="text-red-400">{user ? `@${user.username}` : "Guest"}</span>!
+          Hello,{" "}
+          <span className="text-red-400">
+            {user ? `@${user.username}` : "Guest"}
+          </span>
+          !
         </h1>
-      <UserButton afterSignOutUrl="/" />
+        <UserButton afterSignOutUrl="/" />
       </header>
 
       {/* Main Content */}
@@ -119,7 +115,6 @@ export default function Home() {
                   />
                 </Link>
                 {/* <UserButton afterSignOutUrl="/" /> */}
-
               </div>
             ))}
           </div>

@@ -3,8 +3,8 @@ import Image from "next/image";
 import React from "react";
 
 const Reviews = () => {
- // Dummy data for reviews
- const reviews: Review[] = [
+  // Dummy data for reviews
+  const reviews: Review[] = [
     {
       id: 1,
       movieName: "Shooter",
@@ -47,7 +47,7 @@ const Reviews = () => {
     // ... Add more X-Men movie reviews as needed
   ];
 
-//   const base_image_url = process.env.BASE_IMAGE_URL;
+  //   const base_image_url = process.env.BASE_IMAGE_URL;
   const BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w500";
 
   const StarRating = ({ rating }: { rating: number }) => {
@@ -80,54 +80,52 @@ const Reviews = () => {
   };
 
   return (
-	<section className="mt-10 px-5">
-          <h2 className="text-xl text-white font-bold mb-4">
-            Recent Friends Reviews
-          </h2>
-          <div className="space-y-6">
-            {reviews.map((review) => (
-              <div key={review.id} className="flex space-x-4">
-                <div className="w-1/3">
+    <section className="mt-10 px-5">
+      <h2 className="text-xl text-white font-bold mb-4">
+        Recent Friends Reviews
+      </h2>
+      <div className="space-y-6">
+        {reviews.map((review) => (
+          <div key={review.id} className="flex space-x-4">
+            <div className="w-1/3">
+              <Image
+                className="rounded-lg"
+                src={`${BASE_IMAGE_URL}${review.movieImage}`}
+                alt={review.movieName}
+                width={100}
+                height={150}
+              />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-lg text-white font-medium">
+                    {review.movieName}
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    Reviewed by{" "}
+                    <span className="text-red-300">{review.user.name}</span>
+                  </p>
+                  <StarRating rating={review.stars} />
+                </div>
+                <div className="flex-shrink-0">
                   <Image
-                    className="rounded-lg"
-                    src={`${BASE_IMAGE_URL}${review.movieImage}`}
-                    alt={review.movieName}
-                    width={100}
-                    height={150}
+                    className="rounded-full"
+                    src={review.user.avatar}
+                    alt={review.user.name}
+                    width={50}
+                    height={50}
                   />
                 </div>
-                <div className="flex-1">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="text-lg text-white font-medium">
-                        {review.movieName}
-                      </h3>
-                      <p className="text-gray-400 text-sm">
-                        Reviewed by{" "}
-                        <span className="text-red-300">{review.user.name}</span>
-                      </p>
-                      <StarRating rating={review.stars} />
-                    </div>
-                    <div className="flex-shrink-0">
-                      <Image
-                        className="rounded-full"
-                        src={review.user.avatar}
-                        alt={review.user.name}
-                        width={50}
-                        height={50}
-                      />
-                    </div>
-                  </div>
-                  <p className="text-white text-sm mt-2">{review.reviewText}</p>
-                  <button className="text-red-500 text-xs mt-2">
-                    Read more
-                  </button>
-                </div>
               </div>
-            ))}
+              <p className="text-white text-sm mt-2">{review.reviewText}</p>
+              <button className="text-red-500 text-xs mt-2">Read more</button>
+            </div>
           </div>
-        </section>
-)
+        ))}
+      </div>
+    </section>
+  );
 };
 
 export default Reviews;

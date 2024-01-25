@@ -2,10 +2,17 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Webhook } from 'svix';
 import { WebhookEvent } from '@clerk/nextjs/server';
-import { db } from '@/lib/db';
+// import { db } from '@/lib/db';
+import { PrismaClient } from '@prisma/client';
+
+export const prisma = new PrismaClient({
+  log: ['query', 'info', 'warn'],
+  errorFormat: 'pretty',
+});
 
 export default async function clerkWebhookHandler(req: NextApiRequest, res: NextApiResponse) {
-  const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
+  const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET || '';
+  console.log('webhook secret: ', WEBHOOK_SECRET);  
 
   if (!WEBHOOK_SECRET) {
     console.error('Missing Clerk webhook secret');
@@ -23,6 +30,7 @@ export default async function clerkWebhookHandler(req: NextApiRequest, res: Next
   }
 
   const payload = req.body;
+  // console.log('payload: ', payload);
   const body = JSON.stringify(payload);
 
   const wh = new Webhook(WEBHOOK_SECRET);
@@ -44,40 +52,83 @@ export default async function clerkWebhookHandler(req: NextApiRequest, res: Next
   const eventType = evt.type;
   console.log(`Received Clerk webhook: ${eventType}`);
 
+  // console.log("Data to be saved:", {
+  //   clerkUserId: payload.data.id,
+  //   email: payload.data.email
+  //   // ... other fields ...
+  // });
+
   // Handle different event types...
-if (eventType === "user.created") {
-	const defaultUsername = payload.data.username || 'User_' + payload.data.id;
-	await db.user.create({
-		data: {
-			clerkUserId: payload.data.id, // Assuming Clerk's user ID is stored in `clerkUserId`
-			email: payload.data.email, // Assuming email is part of the payload
-			username: defaultUsername,
-			imageUrl: payload.data.image_url, // Assuming image URL is stored in `profile_image_url`
-			password: '', // Add the required 'password' property
-			// You might want to handle other fields like role if needed
-		},
-	});
-}
+  if (eventType === "user.created") {
+    // Extract the primary email address ID
+    const primaryEmailId = payload.data.primary_email_address_id;
+  
+    // Find the email object that matches the primary email ID
+    const primaryEmailObj = payload.data.email_addresses.find((emailObj: any) => emailObj.id === primaryEmailId);
+    
+    // Extract the email address from the found object
+    const primaryEmail = primaryEmailObj ? primaryEmailObj.email_address : null;
+  
+    if (!primaryEmail) {
+      console.error("Primary email is missing in the payload");
+      res.status(400).send("Primary email is required");
+      return;
+    }
+  
+    // Continue with creating the user in your database
+    try {
+      await prisma.user.upsert({
+        where: { clerkUserId: payload.data.id },
+        create: {
+          clerkUserId: payload.data.id,
+          username: payload.data.username,
+          email: primaryEmail,
+          imageUrl: payload.data.image_url,
+        },
+        update: {
+          email: primaryEmail,
+          imageUrl: payload.data.image_url,
+        },
+      });
+      res.status(200).send('User created or updated');
+    } catch (error) {
+      console.error('Error in user upsert:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  }
+  
 
   if (eventType === "user.updated") {
-    await db.user.update({
-      where: {
-        clerkUserId: payload.data.id,
-      },
-      data: {
-        email: payload.data.email, // Update email if it's included in the payload
-        username: payload.data.username,
-        imageUrl: payload.data.image_url,
-      },
-    });
+    const primaryEmailId = payload.data.primary_email_address_id;
+    const primaryEmailObj = payload.data.email_addresses.find((emailObj: any) => emailObj.id === primaryEmailId);
+    const primaryEmail = primaryEmailObj ? primaryEmailObj.email_address : null;
+
+    try {
+      await prisma.user.update({
+        where: { clerkUserId: payload.data.id },
+        data: {
+          email: primaryEmail, // Update email if it's included in the payload
+          username: payload.data.username,
+          imageUrl: payload.data.image_url,
+        },
+      });
+      res.status(200).send('User updated');
+    } catch (error) {
+      console.error('Error updating user:', error);
+      res.status(500).send('Internal Server Error');
+    }
   }
 
   if (eventType === "user.deleted") {
-    await db.user.delete({
-      where: {
-        clerkUserId: payload.data.id,
-      },
-    });
+    try {
+      await prisma.user.delete({
+        where: { clerkUserId: payload.data.id },
+      });
+      res.status(200).send('User deleted');
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      res.status(500).send('Internal Server Error');
+    }
   }
 
   res.status(200).send('Webhook received');

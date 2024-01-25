@@ -1,6 +1,7 @@
 import { getReviews } from "@/lib/getReviews";
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
+import { db } from "@/lib/db";
 
 interface Review {
   id?: number; 
@@ -9,17 +10,36 @@ interface Review {
   rating: number;
   createdAt: Date;
   clerkUserId: string;
+
 }
+
+export const getServerSideProps = async () => {
+  const reviews = await db.review.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return {
+    props: {
+      reviews: reviews.map((review) => ({
+        ...review,
+        createdAt: review.createdAt.toString(),
+      })),
+    },
+  };
+}
+
 
 const ReviewsComponent = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
 
-  useEffect(() => {
-    getReviews().then((data) => {
-      console.log("Fetched Reviews:", data);
-      setReviews(data);
-    });
-  }, []);
+  // useEffect(() => {
+  //   getReviews().then((data) => {
+  //     console.log("Fetched Reviews:", data);
+  //     setReviews(data);
+  //   });
+  // }, []);
 
   return (
     <div className="text-white">

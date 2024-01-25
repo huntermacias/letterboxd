@@ -1,4 +1,4 @@
-import { getReviews } from "@/lib/getReviews";
+// import { getReviews } from "@/lib/getReviews";
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 

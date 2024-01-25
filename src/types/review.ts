@@ -1,12 +1,15 @@
 export interface Review {
 	id: number;
-	movieName: string;
-	movieImage: string;
-	reviewText: string;
-	user: {
+	movieId: number;
+	body: string;
+	rating: number;
+	createdAt: Date;
+	updatedAt: Date;
+	clerkUserId: string;
+	// Include user details if you are fetching them in your query
+	user?: {
 	  name: string;
 	  avatar: string;
 	};
-	stars: number;
-	commentsCount: number;
   }
+  

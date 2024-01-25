@@ -54,50 +54,50 @@ const MovieDetails = ({ movie }: any) => {
     );
   };
 
-  // const handleReviewSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
+  const handleReviewSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
   
-  //   if (!user || !user.id) {
-  //     // Handle the case where the user is not logged in
-  //     console.error("You must be logged in to submit a review");
-  //     // Optionally, redirect to login or show a message to the user
-  //     return;
-  //   }
+    if (!user || !user.id) {
+      // Handle the case where the user is not logged in
+      console.error("You must be logged in to submit a review");
+      // Optionally, redirect to login or show a message to the user
+      return;
+    }
   
-  //   // Now including the user ID in the review data
-  //   const reviewData = {
-  //     userId: user.id,  // Including the user ID
-  //     movieId: movie.id,
-  //     body: reviewText,
-  //     rating,
-  //   };
+    // Now including the user ID in the review data
+    const reviewData = {
+      userId: user.id,  // Including the user ID
+      movieId: movie.id,
+      body: reviewText,
+      rating,
+    };
   
-  //   try {
-  //     const response = await fetch("/api/reviews", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(reviewData),
-  //     });
+    try {
+      const response = await fetch("/api/reviews", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reviewData),
+      });
   
-  //     console.log("Submitting Review:", reviewData); // Log the data being sent
+      console.log("Submitting Review:", reviewData); // Log the data being sent
 
-  //     if (response.ok) {
-  //       setReviewText("");
-  //       setRating(0);
-  //       // Show success message or update UI
-  //     } else {
-  //       // Handle error
-  //       console.error("Failed to submit review");
-  //       // Show error message to the user
-  //     }
-  //   } catch (error) {
-  //     // Handle fetch error
-  //     console.error("Network error:", error);
-  //     // Show network error message to the user
-  //   }
-  // };
+      if (response.ok) {
+        setReviewText("");
+        setRating(0);
+        // Show success message or update UI
+      } else {
+        // Handle error
+        console.error("Failed to submit review");
+        // Show error message to the user
+      }
+    } catch (error) {
+      // Handle fetch error
+      console.error("Network error:", error);
+      // Show network error message to the user
+    }
+  };
 
   
   
@@ -158,8 +158,7 @@ const MovieDetails = ({ movie }: any) => {
       {/* Rate and Review Section */}
       <div className="mt-6">
         <h3 className="text-lg font-semibold">Rate and Review This Movie:</h3>
-        {/* onSubmit={handleReviewSubmit} */}
-        <form > 
+        <form onSubmit={handleReviewSubmit}>
           <div>
             <textarea
               value={reviewText}

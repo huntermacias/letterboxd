@@ -7,37 +7,45 @@ const Reviews = () => {
   const reviews: Review[] = [
     {
       id: 1,
-      movieId: 101, // Dummy movie ID
-      body: "This movie was absolutely mind-blowing. All around solid action-thriller with Mark Wahlberg in his element...",
-      rating: 5,
-      createdAt: new Date('2023-01-01T00:00:00Z'), // Example date
-      updatedAt: new Date('2023-01-01T00:00:00Z'), // Example date
-      clerkUserId: 'user_2bPc3HCyrCaKS8piwsvNhNTjLEW', // Dummy user ID
-      // Add user details if necessary
+      movieName: "Shooter",
+      movieImage: "/2aWGxo1E5polpBjPvtBRkWp7qaS.jpg",
+      reviewText:
+        "This movie was absolutely mind-blowing. All around solid action-thriller with Mark Wahlberg in his element...",
+      user: {
+        name: "@huntermacias",
+        avatar: "/images/avatars/me.jpg",
+      },
+      stars: 5,
+      commentsCount: 15,
     },
     {
       id: 2,
-      movieId: 102, // Dummy movie ID
-      body: "X-Men started it all - a thrilling adventure with characters that have depth, and a storyline that's engaging.",
-      rating: 3,
-      createdAt: new Date('2023-02-01T00:00:00Z'), // Example date
-      updatedAt: new Date('2023-02-01T00:00:00Z'), // Example date
-      clerkUserId: 'user_2bPc3HCyrCaKS8piwsvNhNTjLEW', // Dummy user ID
-      // Add user details if necessary
+      movieName: "X-Men",
+      movieImage: "/bRDAc4GogyS9ci3ow7UnInOcriN.jpg", // Replace with actual image path
+      reviewText:
+        "X-Men started it all - a thrilling adventure with characters that have depth, and a storyline that's engaging.",
+      user: {
+        name: "@amylainez",
+        avatar: "/images/avatars/amy.jpg", // Replace with actual avatar path
+      },
+      stars: 3,
+      commentsCount: 42,
     },
     {
       id: 3,
-      movieId: 103, // Dummy movie ID
-      body: "A sequel that outdoes the original in every way. The action is better, the stakes are higher, and the characters get more depth.",
-      rating: 4,
-      createdAt: new Date('2023-03-01T00:00:00Z'), // Example date
-      updatedAt: new Date('2023-03-01T00:00:00Z'), // Example date
-      clerkUserId: 'user_2bPc3HCyrCaKS8piwsvNhNTjLEW', // Dummy user ID
-      // Add user details if necessary
+      movieName: "X2: X-Men United",
+      movieImage: "/pwQo1ehiPBqAbiVqD6rfNM8GCFE.jpg", // Replace with actual image path
+      reviewText:
+        "A sequel that outdoes the original in every way. The action is better, the stakes are higher, and the characters get more depth.",
+      user: {
+        name: "@huntermacias",
+        avatar: "/images/avatars/me.jpg", // Replace with actual avatar path
+      },
+      stars: 3.7,
+      commentsCount: 37,
     },
-    // ... Add more reviews as needed
+    // ... Add more X-Men movie reviews as needed
   ];
-  
 
   //   const base_image_url = process.env.BASE_IMAGE_URL;
   const BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w500";
@@ -80,37 +88,37 @@ const Reviews = () => {
         {reviews.map((review) => (
           <div key={review.id} className="flex space-x-4">
             <div className="w-1/3">
-              {/* <Image
+              <Image
                 className="rounded-lg"
                 src={`${BASE_IMAGE_URL}${review.movieImage}`}
                 alt={review.movieName}
                 width={100}
                 height={150}
-              /> */}
+              />
             </div>
             <div className="flex-1">
               <div className="flex items-start justify-between">
                 <div>
                   <h3 className="text-lg text-white font-medium">
-                    {/* {review.movieName} */}
+                    {review.movieName}
                   </h3>
                   <p className="text-gray-400 text-sm">
                     Reviewed by{" "}
-                    <span className="text-red-300">{review.clerkUserId}</span>
+                    <span className="text-red-300">{review.user.name}</span>
                   </p>
-                  {/* <StarRating rating={review.stars} /> */}
+                  <StarRating rating={review.stars} />
                 </div>
                 <div className="flex-shrink-0">
-                  {/* <Image
+                  <Image
                     className="rounded-full"
                     src={review.user.avatar}
                     alt={review.user.name}
                     width={50}
                     height={50}
-                  /> */}
+                  />
                 </div>
               </div>
-              <p className="text-white text-sm mt-2">{review.body}</p>
+              <p className="text-white text-sm mt-2">{review.reviewText}</p>
               <button className="text-red-500 text-xs mt-2">Read more</button>
             </div>
           </div>

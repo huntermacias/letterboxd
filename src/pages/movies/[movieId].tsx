@@ -23,6 +23,8 @@ const MovieDetailPage = ({ user, reviews }: MovieDetailPageProps) => {
   const [relatedMovies, setRelatedMovies] = useState([]);
   const [leadActorMovies, setLeadActorMovies] = useState([]);
   const [leadActorName, setLeadActorName] = useState("");
+  const API_KEY = process.env.NEXT_PUBLIC_MOVIE_API_KEY;
+  console.log('API_KEY', API_KEY);
 
   useEffect(() => {
     const movieId = pathname.split("/").pop();
@@ -33,7 +35,7 @@ const MovieDetailPage = ({ user, reviews }: MovieDetailPageProps) => {
 
     const fetchMovieAndCast = async (movieId: string) => {
       try {
-        const movieResponse = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.MOVIE_API_KEY}&append_to_response=credits`);
+        const movieResponse = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&append_to_response=credits`);
         if (!movieResponse.ok) {
           throw new Error(`API call failed: ${movieResponse.status}`);
         }
@@ -52,7 +54,7 @@ const MovieDetailPage = ({ user, reviews }: MovieDetailPageProps) => {
 
     const fetchTrailerKey = async () => {
       try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${process.env.MOVIE_API_KEY}`);
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}`);
         if (!response.ok) {
           throw new Error(`API call failed: ${response.status}`);
         }
@@ -74,7 +76,7 @@ const MovieDetailPage = ({ user, reviews }: MovieDetailPageProps) => {
 
     const fetchRelatedMovies = async () => {
       try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${process.env.MOVIE_API_KEY}`);
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${API_KEY}`);
         const data = await response.json();
         setRelatedMovies(data.results);
       } catch (error) {
@@ -89,7 +91,7 @@ const MovieDetailPage = ({ user, reviews }: MovieDetailPageProps) => {
 
   const fetchLeadActorMovies = async (actorId: number) => {
     try {
-      const response = await fetch(`https://api.themoviedb.org/3/person/${actorId}/movie_credits?api_key=${process.env.MOVIE_API_KEY}`);
+      const response = await fetch(`https://api.themoviedb.org/3/person/${actorId}/movie_credits?api_key=${API_KEY}`);
       if (!response.ok) {
         throw new Error(`API call failed: ${response.status}`);
       }

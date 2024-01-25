@@ -1,9 +1,5 @@
 import { db } from '@/lib/db';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
-
-
-const prisma = new PrismaClient();
 
 // api/reviews.ts
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -34,7 +30,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               movieId, // Assuming this is an integer in your database
               body,
               rating,
-              clerkUserId: user.clerkUserId,
+              clerkUserId, // Directly use clerkUserId since it's already a string
           },
       });
 
@@ -46,4 +42,3 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 export default handler;
-

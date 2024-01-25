@@ -7,9 +7,5 @@ export interface Review {
 	updatedAt: Date;
 	clerkUserId: string;
 	// Include user details if you are fetching them in your query
-	user?: {
-	  name: string;
-	  avatar: string;
-	};
   }
   

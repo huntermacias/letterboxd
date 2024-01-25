@@ -156,35 +156,40 @@ const MovieDetails = ({ movie }: any) => {
       </div>
 
       {/* Rate and Review Section */}
-      {/* Rate and Review Section */}
-      <div className="mt-6">
-        <h3 className="text-lg font-semibold">Rate and Review This Movie:</h3>
-        <form onSubmit={handleReviewSubmit}>
-          <div>
-            <textarea
-              value={reviewText}
-              onChange={(e) => setReviewText(e.target.value)}
-              placeholder="Write your review here"
-              className="w-full p-2 text-black"
-            />
-          </div>
-          <div>
-            <input
-              type="number"
-              value={rating}
-              onChange={(e) => setRating(parseInt(e.target.value))}
-              placeholder="Rating (1-5)"
-              className="w-full p-2 text-black"
-            />
-          </div>
-          <button
-            type="submit"
-            className="bg-yellow-500 hover:bg-yellow-600 mt-4 px-4 py-2 rounded shadow text-sm"
-          >
-            Submit Review
-          </button>
-        </form>
-      </div>
+      <div className="mt-6 text-white">
+  <h3 className="text-lg font-semibold">Rate and Review This Movie:</h3>
+  <form onSubmit={handleReviewSubmit}>
+    <div className="mt-4">
+      <textarea
+        value={reviewText}
+        onChange={(e) => setReviewText(e.target.value)}
+        placeholder="Write your review here"
+        className="w-full p-2 text-black rounded"
+        rows={4}
+        style={{ backgroundColor: '#04293A', color: '#ffffff' }}
+      />
+    </div>
+    <div className="mt-4">
+      <input
+        type="number"
+        value={rating}
+        onChange={(e) => setRating(Math.max(0, Math.min(5, parseInt(e.target.value))))}
+        placeholder="Rating (0-5)"
+        className="w-full p-2 rounded"
+        style={{ backgroundColor: '#04293A', color: '#ffffff' }}
+        min="0"
+        max="5"
+      />
+    </div>
+    <button
+      type="submit"
+      className="bg-[#1D4E89] hover:bg-[#2C7DA0] mt-4 mb-4 px-4 py-2 rounded shadow text-sm"
+    >
+      Submit Review
+    </button>
+  </form>
+</div>
+
     </div>
   );
 };

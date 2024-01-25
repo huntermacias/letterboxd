@@ -33,7 +33,7 @@ if (!clerkUserId || !movieId || !body || rating === undefined) {
             movieId, // Assuming this is an integer in your database
             body,
             rating,
-            clerkUserId: clerkUserId,
+            clerkUserId: user.clerkUserId,
         },
     });
 

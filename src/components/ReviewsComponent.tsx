@@ -23,6 +23,11 @@ interface ReviewsComponentProps {
 
 
 const ReviewsComponent = ({ reviews }: ReviewsComponentProps) => {
+
+  if (!Array.isArray(reviews)) {
+    // Handle the case where reviews is not an array
+    return <div>No reviews data available.</div>;
+  }
   return (
     <div className="text-white bg-[#040D12] p-6 rounded-lg">
       <h1 className="text-3xl font-bold mb-6 text-glow">Reviews</h1>
@@ -50,7 +55,7 @@ const ReviewsComponent = ({ reviews }: ReviewsComponentProps) => {
             </div>
           </div>
         ))}
-        {reviews.length === 0 && <p className="text-center text-gray-400 text-lg">No reviews available.</p>}
+        {reviews?.length === 0 && <p className="text-center text-gray-400 text-lg">No reviews available.</p>}
       </div>
     </div>
   );

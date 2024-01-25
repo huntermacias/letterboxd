@@ -1,7 +1,5 @@
-import { getReviews } from "@/lib/getReviews";
-import React, { useEffect, useState } from "react";
+// import { getReviews } from "@/lib/getReviews";
 import { format } from "date-fns";
-import { db } from "@/lib/db";
 
 interface User {
   username: string;

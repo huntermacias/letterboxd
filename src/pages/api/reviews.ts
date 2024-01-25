@@ -9,7 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       res.setHeader('Allow', ['POST']);
       return res.status(405).end('Method Not Allowed');
   }
-  const { userId: clerkUserId,  movieId, body, rating } = req.body;
+  const { userId: clerkUserId, username,  movieId, body, rating } = req.body;
 
 
 if (!clerkUserId || !movieId || !body || rating === undefined) {

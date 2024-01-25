@@ -4,35 +4,21 @@ import { format } from "date-fns";
 import { db } from "@/lib/db";
 
 interface Review {
-  id?: number; 
-  movieId?: number; 
+  id: number;
+  movieId: number;
   body: string;
   rating: number;
-  createdAt: Date;
+  createdAt: string; // Changed to string to match the prop format
   clerkUserId: string;
-
 }
 
-export const getServerSideProps = async () => {
-  const reviews = await db.review.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
-  return {
-    props: {
-      reviews: reviews.map((review) => ({
-        ...review,
-        createdAt: review.createdAt.toString(),
-      })),
-    },
-  };
+interface ReviewsComponentProps {
+  reviews: Review[];
 }
 
 
-const ReviewsComponent = () => {
-  const [reviews, setReviews] = useState<Review[]>([]);
+const ReviewsComponent = ({ reviews }: ReviewsComponentProps) => {
+  // const [reviews, setReviews] = useState<Review[]>([]);
 
   // useEffect(() => {
   //   getReviews().then((data) => {
@@ -45,8 +31,8 @@ const ReviewsComponent = () => {
     <div className="text-white">
       <h1 className="text-2xl font-bold mb-4">Reviews</h1>
       <div className="space-y-4">
-        {reviews.map((review) => (
-          <div key={review.id} className="bg-gray-800 p-4 rounded-lg">
+      {reviews.map((review) => (
+                  <div key={review.id} className="bg-gray-800 p-4 rounded-lg">
             <div className="flex justify-between items-center mb-2">
               <span className="font-semibold">
                 User ID: {review.clerkUserId}

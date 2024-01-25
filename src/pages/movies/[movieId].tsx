@@ -8,35 +8,21 @@ import MovieList from "@/components/MovieList";
 import HeroImage from "@/components/HeroSection";
 import MovieDetails from "@/components/MovieDetails";
 import ReviewsComponent from "@/components/ReviewsComponent";
+import { db } from "@/lib/db";
 
-export async function getServerSideProps(context: any) {
-  try {
-    const auth = await getAuth(context.req);
-
-    if (!auth.userId) {
-      // Handle unauthenticated user
-      return { props: { user: null } };
-    }
-    return { props: { user: { id: auth.userId } } };
-  } catch (error:any) {
-    console.error("Error fetching current user:", error);
-    return { props: { error: error.message } };
-  }
+interface MovieDetailPageProps {
+  user: any;
+  reviews: any[];
 }
 
-const MovieDetailPage = (user: any) => {
+const MovieDetailPage = ({ user, reviews }: MovieDetailPageProps) => {
   const pathname = usePathname();
   const [movie, setMovie] = useState<Movie>();
   const [error, setError] = useState<string>("");
   const [trailerKey, setTrailerKey] = useState("");
-  const [isTrailerModalOpen, setTrailerModalOpen] = useState(false);
   const [relatedMovies, setRelatedMovies] = useState([]);
   const [leadActorMovies, setLeadActorMovies] = useState([]);
   const [leadActorName, setLeadActorName] = useState("");
-
-
-
-  // Function to return a star rating
 
   useEffect(() => {
     const movieId = pathname.split("/").pop();
@@ -44,71 +30,71 @@ const MovieDetailPage = (user: any) => {
       setError("Movie ID not found.");
       return;
     }
+
     const fetchMovieAndCast = async (movieId: string) => {
       try {
-        // Fetch movie details, which includes the cast
-        const movieResponse = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}?api_key=6500efce781df0e3504d6dd24db9a472&append_to_response=credits`
-        );
+        const movieResponse = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=6500efce781df0e3504d6dd24db9a472&append_to_response=credits`);
         if (!movieResponse.ok) {
           throw new Error(`API call failed: ${movieResponse.status}`);
         }
         const movieData = await movieResponse.json();
         setMovie(movieData);
 
-        // Assume the first cast member is the lead actor
-        const leadActor = movieData.credits.cast[0]; // Assuming the lead actor is the first listed
+        const leadActor = movieData.credits.cast[0];
         if (leadActor) {
-          setLeadActorName(leadActor.name); // Store the lead actor's name
+          setLeadActorName(leadActor.name);
           fetchLeadActorMovies(leadActor.id);
         }
-      } catch (err: any) {
+      } catch (err:any) {
         setError(err.message || "An error occurred");
       }
     };
 
     const fetchTrailerKey = async () => {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=6500efce781df0e3504d6dd24db9a472`
-      );
-      const data = await response.json();
-      const officialTrailer = data.results.find(
-        (video: { type: string; official: any }) =>
-          video.type === "Trailer" && video.official
-      );
-      setTrailerKey(officialTrailer?.key);
+      try {
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=6500efce781df0e3504d6dd24db9a472`);
+        if (!response.ok) {
+          throw new Error(`API call failed: ${response.status}`);
+        }
+        const data = await response.json();
+    
+        if (data && data.results) {
+          const officialTrailer = data.results.find(
+            (video: { type: string; official: any }) => video.type === "Trailer" && video.official
+          );
+          setTrailerKey(officialTrailer?.key);
+        } else {
+          console.error("No trailer data found");
+        }
+      } catch (error) {
+        console.error("Failed to fetch trailer key:", error);
+      }
+    };
+    
+
+    const fetchRelatedMovies = async () => {
+      try {
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=6500efce781df0e3504d6dd24db9a472`);
+        const data = await response.json();
+        setRelatedMovies(data.results);
+      } catch (error) {
+        console.error("Failed to fetch related movies:", error);
+      }
     };
 
-    if (movieId) {
-      fetchMovieAndCast(movieId); // Replacing the original fetchMovieData call
-      fetchTrailerKey();
-      fetchRelatedMovies(movieId); // New function to fetch related movies
-    }
+    fetchMovieAndCast(movieId);
+    fetchTrailerKey();
+    fetchRelatedMovies();
   }, [pathname]);
 
-  const fetchRelatedMovies = async (movieId: string) => {
-    try {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=6500efce781df0e3504d6dd24db9a472`
-      );
-      const data = await response.json();
-      setRelatedMovies(data.results);
-    } catch (error) {
-      console.error("Failed to fetch related movies:", error);
-    }
-  };
-
-  // Fetch lead actor's movies
   const fetchLeadActorMovies = async (actorId: number) => {
     try {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/person/${actorId}/movie_credits?api_key=6500efce781df0e3504d6dd24db9a472`
-      );
+      const response = await fetch(`https://api.themoviedb.org/3/person/${actorId}/movie_credits?api_key=6500efce781df0e3504d6dd24db9a472`);
       if (!response.ok) {
         throw new Error(`API call failed: ${response.status}`);
       }
       const data = await response.json();
-      setLeadActorMovies(data.cast); // Assuming you want the movies they've acted in
+      setLeadActorMovies(data.cast);
     } catch (error) {
       console.error("Failed to fetch lead actor's movies:", error);
     }
@@ -139,7 +125,7 @@ const MovieDetailPage = (user: any) => {
           {/* Movie Details */}
           <MovieDetails movie={movie} />
         </div>
-          <ReviewsComponent />
+          <ReviewsComponent reviews={reviews} />
 
         <MovieList title="Related Movies" movies={relatedMovies} />
 
@@ -153,4 +139,28 @@ const MovieDetailPage = (user: any) => {
   );
 };
 
+export async function getServerSideProps(context: any) {
+  try {
+    const auth = await getAuth(context.req);
+
+    const reviews = await db.review.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return {
+      props: {
+        user: auth.userId ? { id: auth.userId } : null,
+        reviews: JSON.parse(JSON.stringify(reviews)),
+      },
+    };
+  } catch (error: any) {
+    console.error("Error fetching data:", error);
+    return { props: { error: error.message } };
+  }
+}
+
 export default MovieDetailPage;
+
+

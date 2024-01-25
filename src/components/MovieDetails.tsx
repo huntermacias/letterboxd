@@ -67,6 +67,7 @@ const MovieDetails = ({ movie }: any) => {
     // Now including the user ID in the review data
     const reviewData = {
       userId: user.id,  // Including the user ID
+      username: user.username, // Including the username
       movieId: movie.id,
       body: reviewText,
       rating,

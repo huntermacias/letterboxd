@@ -1,9 +1,7 @@
 import { db } from '@/lib/db';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
 
 
-const prisma = new PrismaClient();
 
 // api/reviews.ts
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -11,12 +9,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       res.setHeader('Allow', ['POST']);
       return res.status(405).end('Method Not Allowed');
   }
+  const { userId: clerkUserId,  movieId, body, rating } = req.body;
 
-  // Hardcoded values for testing
-  const clerkUserId = 'user_2bPc3HCyrCaKS8piwsvNhNTjLEW';
-  const movieId = 787699;
-  const body = 'awful';
-  const rating = 3;
+
+if (!clerkUserId || !movieId || !body || rating === undefined) {
+    return res.status(400).json({ error: 'Missing required fields' });
+}
+
 
   try {
       // Check if the user exists
@@ -24,19 +23,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           where: { clerkUserId: clerkUserId },
       });
 
-      if (!user) {
-          return res.status(404).json({ error: 'User not found' });
-      }
+    if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+    }
 
-      // Create the review
-      const review = await db.review.create({
-          data: {
-              movieId, // Assuming this is an integer in your database
-              body,
-              rating,
-              clerkUserId: user.clerkUserId,
-          },
-      });
+    // Create the review
+    const review = await db.review.create({
+        data: {
+            movieId, // Assuming this is an integer in your database
+            body,
+            rating,
+            clerkUserId: user.clerkUserId,
+        },
+    });
 
       return res.status(200).json(review);
   } catch (error: any) {

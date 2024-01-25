@@ -33,7 +33,7 @@ const MovieDetailPage = ({ user, reviews }: MovieDetailPageProps) => {
 
     const fetchMovieAndCast = async (movieId: string) => {
       try {
-        const movieResponse = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=6500efce781df0e3504d6dd24db9a472&append_to_response=credits`);
+        const movieResponse = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.MOVIE_API_KEY}&append_to_response=credits`);
         if (!movieResponse.ok) {
           throw new Error(`API call failed: ${movieResponse.status}`);
         }
@@ -52,7 +52,7 @@ const MovieDetailPage = ({ user, reviews }: MovieDetailPageProps) => {
 
     const fetchTrailerKey = async () => {
       try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=6500efce781df0e3504d6dd24db9a472`);
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${process.env.MOVIE_API_KEY}`);
         if (!response.ok) {
           throw new Error(`API call failed: ${response.status}`);
         }
@@ -74,7 +74,7 @@ const MovieDetailPage = ({ user, reviews }: MovieDetailPageProps) => {
 
     const fetchRelatedMovies = async () => {
       try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=6500efce781df0e3504d6dd24db9a472`);
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${process.env.MOVIE_API_KEY}`);
         const data = await response.json();
         setRelatedMovies(data.results);
       } catch (error) {
@@ -89,7 +89,7 @@ const MovieDetailPage = ({ user, reviews }: MovieDetailPageProps) => {
 
   const fetchLeadActorMovies = async (actorId: number) => {
     try {
-      const response = await fetch(`https://api.themoviedb.org/3/person/${actorId}/movie_credits?api_key=6500efce781df0e3504d6dd24db9a472`);
+      const response = await fetch(`https://api.themoviedb.org/3/person/${actorId}/movie_credits?api_key=${process.env.MOVIE_API_KEY}`);
       if (!response.ok) {
         throw new Error(`API call failed: ${response.status}`);
       }

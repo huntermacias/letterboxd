@@ -85,7 +85,7 @@ const Reviews = () => {
         Recent Friends Reviews
       </h2>
       <div className="space-y-6">
-        {reviews.map((review) => (
+        {reviews?.map((review) => (
           <div key={review.id} className="flex space-x-4">
             <div className="w-1/3">
               <Image

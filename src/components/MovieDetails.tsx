@@ -114,7 +114,7 @@ const MovieDetails = ({ movie }: any) => {
       <div className="flex items-center gap-2">
         <StarRating rating={movie.vote_average / 2} />
         <div className="flex flex-wrap gap-2">
-          {movie.genres.map((genre: any) => (
+          {movie.genres?.map((genre: any) => (
             <span
               key={genre.id}
               className="px-3 py-1 bg-gray-700 rounded-full text-xs"

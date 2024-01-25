@@ -27,7 +27,7 @@ const ReviewsComponent = ({ reviews }: ReviewsComponentProps) => {
     <div className="text-white bg-[#040D12] p-6 rounded-lg">
       <h1 className="text-3xl font-bold mb-6 text-glow">Reviews</h1>
       <div className="space-y-6">
-        {reviews.map((review) => (
+        {reviews?.map((review) => (
           <div key={review.id} className="bg-[#000000] p-4 rounded-xl shadow-lg">
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center">

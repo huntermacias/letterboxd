@@ -102,7 +102,7 @@ export default function Home() {
             Popular Films This Month
           </h2>
           <div className="flex overflow-x-auto gap-4 px-5">
-            {movies.map((movie) => (
+            {movies?.map((movie) => (
               <div key={movie.id} className="w-40 md:w-64 flex-shrink-0">
                 <Link href={`/movies/${movie.id}`}>
                   <Image

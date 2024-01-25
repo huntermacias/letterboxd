@@ -9,7 +9,7 @@ const MovieList = ({ title, movies }: { title: string, movies: any[] }) => {
     <div className="mt-10">
       <h2 className="text-2xl font-bold">{title}</h2>
       <div className="flex overflow-x-auto gap-4 mt-4">
-        {isMoviesArray && movies.map((movie) => (
+        {isMoviesArray && movies?.map((movie) => (
           <MovieComponent key={movie.id} movie={movie} />
         ))}
       </div>
